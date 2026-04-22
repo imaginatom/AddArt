@@ -72,6 +72,51 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ── Journey mode ──
+   Applied by <JourneyProvider> to <body> on marketing routes. The provider
+   mutates the site-wide CSS custom properties (--background, --foreground,
+   --accent, etc.) as the user scrolls through sections marked with
+   [data-journey-palette]. These transitions animate the *resolved* colors
+   so the whole document morphs as one continuous palette instead of
+   section-by-section cuts. Kept scoped to semantic/visual properties so
+   interaction transitions (hover scale, opacity) stay snappy. */
+body.journey-mode,
+body.journey-mode main,
+body.journey-mode header,
+body.journey-mode footer,
+body.journey-mode section,
+body.journey-mode article,
+body.journey-mode aside,
+body.journey-mode nav,
+body.journey-mode h1,
+body.journey-mode h2,
+body.journey-mode h3,
+body.journey-mode h4,
+body.journey-mode p,
+body.journey-mode span,
+body.journey-mode a,
+body.journey-mode li,
+body.journey-mode button,
+body.journey-mode input,
+body.journey-mode textarea,
+body.journey-mode select,
+body.journey-mode label,
+body.journey-mode svg {
+  transition:
+    background-color 820ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 820ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 820ms cubic-bezier(0.22, 1, 0.36, 1),
+    fill 820ms cubic-bezier(0.22, 1, 0.36, 1),
+    stroke 820ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Opt-out: some visual effects (marquees, hover zooms, button wipes) manage
+   their own transitions and should not inherit the slow palette tween. */
+body.journey-mode [data-journey-opt-out],
+body.journey-mode [data-journey-opt-out] * {
+  transition: none;
+}
+
 /* ── Lenis smooth scroll boilerplate ──
    Applied automatically by <LenisProvider> on non-admin routes.
    See: https://lenis.darkroom.engineering/ */
