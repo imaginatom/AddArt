@@ -19,21 +19,23 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nounstudio.dz"),
+  metadataBase: new URL("https://addart.dz"),
   title: {
-    default: "Noun Studio | Cabinet d'architecture \u00e0 Oran",
-    template: "%s | Noun Studio",
+    default: "AddArt | Studio d'illustration & motion à Oran",
+    template: "%s | AddArt",
   },
   description:
-    "Noun Studio, cabinet d'architecture et studio de design \u00e0 Oran, Alg\u00e9rie. Architecture r\u00e9sidentielle et commerciale, branding et contenu culturel.",
+    "AddArt — studio d'illustration, de cartoon art et de motion design à Oran, Algérie. Character design, jaquettes de jeux, graphismes commerciaux et courtes animations.",
   keywords: [
-    "architecte Oran",
-    "cabinet d'architecture Oran",
-    "architecture Oran",
-    "studio design Oran",
-    "branding Oran",
-    "Noun Studio",
-    "Alg\u00e9rie",
+    "illustrateur Oran",
+    "cartoon art",
+    "character design",
+    "jaquette de jeu",
+    "motion design Algérie",
+    "animation courte",
+    "graphiste Oran",
+    "game cover art",
+    "AddArt",
   ],
   alternates: {
     canonical: "/",
@@ -42,56 +44,56 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_DZ",
     url: "/",
-    siteName: "Noun Studio",
-    title: "Noun Studio | Cabinet d'architecture \u00e0 Oran",
+    siteName: "AddArt",
+    title: "AddArt | Studio d'illustration & motion à Oran",
     description:
-      "Cabinet d'architecture et studio de design \u00e0 Oran, Alg\u00e9rie. Architecture, branding et contenu culturel.",
+      "Studio d'illustration et motion design à Oran. Cartoon art, jaquettes de jeux, graphismes commerciaux et courtes animations.",
     images: [
       {
         url: "/images/hero-bg.jpg",
         width: 1200,
         height: 630,
-        alt: "Noun Studio \u00e0 Oran, Alg\u00e9rie",
+        alt: "Illustrations et animations cartoon par AddArt",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Noun Studio | Cabinet d'architecture \u00e0 Oran",
+    title: "AddArt | Studio d'illustration & motion à Oran",
     description:
-      "Cabinet d'architecture et studio de design \u00e0 Oran, Alg\u00e9rie. Architecture, branding et contenu culturel.",
+      "Studio d'illustration et motion design à Oran. Cartoon art, jaquettes de jeux, graphismes commerciaux et courtes animations.",
     images: ["/images/hero-bg.jpg"],
   },
   generator: "v0.app",
 }
 
 export const viewport: Viewport = {
-  themeColor: "#2d2521",
+  themeColor: "#101216",
   width: "device-width",
   initialScale: 1,
 }
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Architect",
-  name: "Noun Studio",
+  "@type": "Organization",
+  name: "AddArt",
   image: "/images/hero-bg.jpg",
-  email: "contact@nounstudio.dz",
+  email: "addart69@gmail.com",
   founder: {
     "@type": "Person",
-    name: "SAHNOUNE Mohammed",
-    jobTitle: "Architecte & Directeur Cr\u00e9atif",
+    name: "{{ARTIST_NAME}}",
+    jobTitle: "Illustrateur & Motion Designer",
   },
-  url: "https://nounstudio.dz",
+  url: "https://addart.dz",
   description:
-    "Cabinet d'architecture et studio de design \u00e0 Oran, Alg\u00e9rie. Architecture, branding et contenu culturel.",
+    "Studio d'illustration, de cartoon art et de motion design à Oran, Algérie.",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Oran",
     addressRegion: "Oran",
     addressCountry: "DZ",
   },
-  areaServed: ["Oran", "Alg\u00e9rie"],
+  areaServed: ["Oran", "Algérie", "International"],
   priceRange: "$$",
 }
 

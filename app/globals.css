@@ -10,39 +10,51 @@
 
 @layer base {
   :root {
-    --background: 40 20% 97%;
-    --foreground: 20 10% 10%;
-    --card: 40 20% 99%;
-    --card-foreground: 20 10% 10%;
-    --popover: 40 20% 99%;
-    --popover-foreground: 20 10% 10%;
-    --primary: 20 10% 15%;
-    --primary-foreground: 40 20% 97%;
-    --secondary: 30 15% 88%;
-    --secondary-foreground: 20 10% 10%;
-    --muted: 35 15% 93%;
-    --muted-foreground: 20 5% 45%;
-    --accent: 30 40% 55%;
-    --accent-foreground: 40 20% 97%;
-    --destructive: 0 84.2% 60.2%;
+    /* AddArt — dark graphite base with platinum text and electric-magenta accent.
+       Tuned so colorful illustration/cartoon artwork reads vividly on top. */
+    --background: 220 12% 7%;
+    --foreground: 210 15% 94%;
+    --card: 220 11% 10%;
+    --card-foreground: 210 15% 94%;
+    --popover: 220 11% 10%;
+    --popover-foreground: 210 15% 94%;
+    --primary: 210 14% 90%;
+    --primary-foreground: 220 15% 8%;
+    --secondary: 220 9% 16%;
+    --secondary-foreground: 210 15% 94%;
+    --muted: 220 9% 14%;
+    --muted-foreground: 215 10% 65%;
+    --accent: 322 88% 58%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 52%;
     --destructive-foreground: 0 0% 98%;
-    --border: 35 12% 88%;
-    --input: 35 12% 88%;
-    --ring: 20 10% 15%;
-    --chart-1: 20 10% 15%;
-    --chart-2: 30 40% 55%;
-    --chart-3: 35 20% 50%;
-    --chart-4: 15 30% 45%;
-    --chart-5: 0 0% 30%;
+    --border: 220 8% 20%;
+    --input: 220 9% 16%;
+    --ring: 322 88% 58%;
+    --chart-1: 322 88% 58%;
+    --chart-2: 210 14% 78%;
+    --chart-3: 200 70% 58%;
+    --chart-4: 280 72% 62%;
+    --chart-5: 145 55% 55%;
     --radius: 0.625rem;
-    --sidebar-background: 40 20% 97%;
-    --sidebar-foreground: 20 10% 10%;
-    --sidebar-primary: 20 10% 15%;
-    --sidebar-primary-foreground: 40 20% 97%;
-    --sidebar-accent: 30 15% 88%;
-    --sidebar-accent-foreground: 20 10% 10%;
-    --sidebar-border: 35 12% 88%;
-    --sidebar-ring: 20 10% 15%;
+    --sidebar-background: 220 13% 6%;
+    --sidebar-foreground: 210 15% 94%;
+    --sidebar-primary: 322 88% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 9% 14%;
+    --sidebar-accent-foreground: 210 15% 94%;
+    --sidebar-border: 220 8% 20%;
+    --sidebar-ring: 322 88% 58%;
+
+    /* Deeper "floor" tone for the footer (Option A: grounded dark base). */
+    --footer: 220 14% 4%;
+    --footer-foreground: 210 15% 88%;
+
+    /* Metallic gradient stops (used by .metallic-surface / .metallic-text) */
+    --metal-1: 220 10% 22%;
+    --metal-2: 215 8% 35%;
+    --metal-3: 210 12% 55%;
+    --metal-4: 210 14% 78%;
   }
 }
 
@@ -237,4 +249,75 @@ html {
 
 .premium-card:hover::after {
   opacity: 1;
+}
+
+/* ── Metallic surfaces & text ──
+   Optional utilities for a "polished metal" look. Apply sparingly:
+   headline words, feature badges, a hero CTA, a logomark plate, etc. */
+
+.metallic-surface {
+  background:
+    linear-gradient(
+      135deg,
+      hsl(var(--metal-1)) 0%,
+      hsl(var(--metal-2)) 30%,
+      hsl(var(--metal-4)) 50%,
+      hsl(var(--metal-2)) 70%,
+      hsl(var(--metal-1)) 100%
+    );
+  border: 1px solid hsl(var(--metal-3) / 0.35);
+  box-shadow:
+    inset 0 1px 0 hsl(var(--metal-4) / 0.35),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.5),
+    0 10px 30px -18px hsl(0 0% 0% / 0.7);
+}
+
+.metallic-text {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--metal-4)) 0%,
+    hsl(var(--metal-3)) 45%,
+    hsl(var(--metal-2)) 55%,
+    hsl(var(--metal-4)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.accent-text {
+  background: linear-gradient(
+    180deg,
+    hsl(328 95% 72%) 0%,
+    hsl(322 88% 58%) 50%,
+    hsl(316 80% 45%) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Diagonal side-by-side hero/intro split ──
+   Hero (.diagonal-left) is wider (75% → 30% from top to bottom).
+   Intro (.diagonal-right) is its exact complement (25% → 70%).
+   Both edges meet along a single diagonal seam.
+   Disabled below lg so mobile stacks normally. */
+@media (min-width: 1024px) {
+  .diagonal-left {
+    clip-path: polygon(0 0, 75% 0, 30% 100%, 0 100%);
+  }
+  .diagonal-right {
+    clip-path: polygon(75% 0, 100% 0, 100% 100%, 30% 100%);
+  }
+  /* Magenta hairline running along the diagonal seam. */
+  .diagonal-seam {
+    clip-path: polygon(
+      74.7% 0,
+      75.3% 0,
+      30.3% 100%,
+      29.7% 100%
+    );
+  }
 }

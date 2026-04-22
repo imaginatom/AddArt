@@ -1,18 +1,18 @@
-# Noun Studio — Technical README
+# AddArt — Technical README
 
-This document is written for automated ingestion (e.g. another AI or senior engineer onboarding). It describes the **Noun Studio** marketing site and CMS: a French (`fr-DZ`) public website for an architecture and branding studio (Oran, Algeria), backed by **Supabase** (Auth, Postgres content, Storage) and **Next.js App Router**.
+This document is written for automated ingestion (e.g. another AI or senior engineer onboarding). It describes the **AddArt** marketing site and CMS: a French (`fr-DZ`) public website for an illustration and motion design studio (Oran, Algeria), backed by **Supabase** (Auth, Postgres content, Storage) and **Next.js App Router**.
 
 ---
 
 ## 1. Project overview
 
-**What it is:** A multi-page promotional website for **Noun Studio** — positioned as a multidisciplinary architecture practice and design studio (architecture, visual identity / branding, cultural content). The product name in UI and metadata is **Noun Studio**; founder / creative lead **SAHNOUNE Mohammed** appears in structured data and contact copy.
+**What it is:** A multi-page promotional website for **AddArt** — positioned as an independent illustration and motion design studio (cartoon art, character design, jaquettes de jeux, graphismes commerciaux, courtes animations). The product name in UI and metadata is **AddArt**; the founding artist appears as `{{ARTIST_NAME}}` placeholder in structured data and contact copy until replaced.
 
-**Who it is for:** Prospective clients seeking residential/commercial architecture, renovation, visual identity, and related services in **Algeria and France** (copy emphasizes **Oran** and local SEO).
+**Who it is for:** Prospective clients seeking illustration, cartoon art, key art / game covers, commercial graphics, and motion design — based in **Oran, Algérie** with reach to national and international clients.
 
 **What it does:**
 
-- **Public site:** Home, service pillars (Architecture, Branding), portfolio (`/realisations`), contact with FAQ, SEO metadata, `sitemap.xml`, `robots.txt`, JSON-LD (`Architect` schema).
+- **Public site:** Home, service pillars (Illustration, Motion), portfolio (`/realisations`), contact with FAQ, SEO metadata, `sitemap.xml`, `robots.txt`, JSON-LD (`Organization` schema).
 - **CMS:** Authenticated **admin** area (`/admin/*`) where staff with `profiles.role = 'admin'` edit structured JSON content stored in `site_content`, and upload images to Supabase Storage bucket `site-images`.
 - **Content resolution:** Server components fetch `site_content` and **merge** DB rows with **TypeScript defaults** in `lib/content/*.ts` so missing rows still render sensible copy and images.
 
@@ -61,32 +61,32 @@ Versions below reflect **`package.json` ranges** where applicable; **installed**
 
 ## 3. Project structure
 
-Repository root (`noun/`):
+Repository root (`addart/`):
 
 | Path | Purpose |
 |------|---------|
 | `app/` | Next.js App Router: layouts, pages, `globals.css`, metadata routes |
 | `app/layout.tsx` | Root layout: fonts, global shell (header, footer, floating CTA, back-to-top, scroll animations), JSON-LD, **no** ThemeProvider |
 | `app/page.tsx` | Home — loads `site_content` for `page=home` + portfolio gallery slice for preview |
-| `app/architecture/page.tsx` | Architecture service page from DB `page=architecture` |
-| `app/branding/page.tsx` | Branding service page from DB `page=branding` |
+| `app/illustration/page.tsx` | Illustration service page from DB `page=illustration` |
+| `app/motion/page.tsx` | Motion service page from DB `page=motion` |
 | `app/realisations/page.tsx` | Portfolio / réalisations from DB `page=portfolio` |
 | `app/contact/page.tsx` | Static contact page + `ContactForm` + FAQ (not CMS-driven) |
-| `app/sitemap.ts` | `MetadataRoute.Sitemap` for `https://nounstudio.dz` |
+| `app/sitemap.ts` | `MetadataRoute.Sitemap` for `https://addart.dz` |
 | `app/robots.ts` | Allows all crawlers; points sitemap to production URL |
 | `app/admin/layout.tsx` | Admin chrome: `AdminNav` only |
 | `app/admin/page.tsx` | Admin dashboard (client): aggregates `site_content` counts per page |
 | `app/admin/login/page.tsx` | Email/password sign-in; requires `profiles.role === 'admin'` |
 | `app/admin/homepage/page.tsx` | CMS editor for home sections |
 | `app/admin/portfolio/page.tsx` | CMS editor for portfolio sections |
-| `app/admin/architecture/page.tsx` | CMS editor for architecture sections |
-| `app/admin/branding/page.tsx` | CMS editor for branding sections |
+| `app/admin/illustration/page.tsx` | CMS editor for illustration sections |
+| `app/admin/motion/page.tsx` | CMS editor for motion sections |
 | `components/` | Shared React components (marketing + admin) |
 | `components/ui/` | shadcn-style primitives (Radix + Tailwind) |
 | `components/home/` | Home-only sections (hero, services, testimonials, etc.) |
 | `components/admin/` | `AdminNav`, `ImageUpload`, `LogoutButton` |
 | `hooks/` | `use-mobile`, `use-scroll-animation`, `use-toast` (duplicated filename under `components/ui/` for some shadcn patterns) |
-| `lib/content/` | Default content + `merge*` functions: `homepage`, `portfolio`, `architecture`, `branding` |
+| `lib/content/` | Default content + `merge*` functions: `homepage`, `portfolio`, `illustration`, `motion` |
 | `lib/supabase/` | `env.ts`, browser `client.ts`, server `server.ts` |
 | `lib/utils.ts` | `cn()` (clsx + tailwind-merge) |
 | `middleware.ts` | Protects `/admin/*` except login; enforces auth + admin role |
@@ -115,17 +115,17 @@ Repository root (`noun/`):
 
 - Responsive layout with fixed header (transparent on home until scroll), mobile sheet nav, footer.
 - Home: hero (optional background image from CMS), stats bar, services grid, why-us (image + benefits), testimonials carousel/grid, portfolio preview (first 6 projects from merged portfolio content), local SEO block (Oran), contact CTA.
-- Architecture & Branding: hero with full-bleed image, intro, alternating service blocks with features and images, process steps (architecture only), primary CTA + embedded contact form, cross-links to sibling pages / portfolio.
+- Illustration & Motion: hero with full-bleed image, intro, alternating service blocks with features and images, process steps (illustration only), primary CTA + embedded contact form, cross-links to sibling pages / portfolio.
 - Portfolio: filterable masonry-style gallery with lightbox (`RealisationsGallery`), bottom CTA + mailto.
 - Contact: bilingual French copy, team names, FAQ accordion, **client-only** contact form UX.
-- SEO: per-page `metadata`, Open Graph, Twitter card, canonical base `https://nounstudio.dz`, JSON-LD `Architect`.
+- SEO: per-page `metadata`, Open Graph, Twitter card, canonical base `https://addart.dz`, JSON-LD `Organization`.
 - UX: floating mail CTA (mobile, after scroll), back-to-top, scroll-triggered animations (`useScrollAnimation`).
 
 **CMS / admin**
 
 - Supabase Auth **email/password** login at `/admin/login`.
 - Middleware + login page both require **`profiles.role === 'admin'`**; non-admins are signed out and redirected to `/`.
-- Dashboard shows section counts and latest `updated_at` per logical page (`home`, `portfolio`, `architecture`, `branding`).
+- Dashboard shows section counts and latest `updated_at` per logical page (`home`, `portfolio`, `illustration`, `motion`).
 - Per-section editors: load `site_content`, edit in React state, **save** = insert or update row by `(page, section)` with `content_type: 'text'` and JSON `content`.
 - **ImageUpload:** uploads to Storage bucket `site-images`, stores public URL + path in JSON for hero/service images; remove deletes object when `path` known.
 
@@ -169,7 +169,7 @@ Standard Supabase Auth table. **`public.profiles.id`** is a foreign key to `auth
 | Column | Type | Notes |
 |--------|------|--------|
 | `id` | `uuid` | PK, default `gen_random_uuid()` |
-| `page` | `text` | Logical page key: e.g. `home`, `portfolio`, `architecture`, `branding` |
+| `page` | `text` | Logical page key: e.g. `home`, `portfolio`, `illustration`, `motion` |
 | `section` | `text` | Section key within page (e.g. `hero`, `gallery`, `services`) |
 | `content_type` | `text` | **CHECK** `IN ('text','image','list')` — app currently writes **`'text'`** for all CMS saves while storing structured JSON in `content` |
 | `content` | `jsonb` | `NOT NULL` — shape per `lib/content/*` merge functions |
@@ -194,7 +194,7 @@ From migration `20260216_add_site_images_bucket.sql`:
 
 ### 5.5 Seed data
 
-`supabase/seed.sql` inserts default rows for **`page = 'home'`** sections (`hero`, `socialProof`, `services`, `whyUs`, `testimonials`, `gallery`, `localSeo`, `contactCta`) if missing. Portfolio/architecture/branding defaults live in **TypeScript** only until saved from admin.
+`supabase/seed.sql` inserts default rows for **`page = 'home'`** sections (`hero`, `socialProof`, `services`, `whyUs`, `testimonials`, `galleryPreview`, `localSeo`, `contactCta`) if missing. Portfolio/illustration/motion defaults live in **TypeScript** only until saved from admin.
 
 ---
 
@@ -215,13 +215,13 @@ Required at build/runtime for any route using Supabase (effectively the whole ap
 
 ## 7. Pages and routes
 
-Base URL in code: **`https://nounstudio.dz`** (`metadataBase`, sitemap, robots).
+Base URL in code: **`https://addart.dz`** (`metadataBase`, sitemap, robots).
 
 | Route | Renders | Access |
 |-------|---------|--------|
 | `/` | Home sections (DB + defaults) | Public |
-| `/architecture` | Architecture page (DB + defaults) | Public |
-| `/branding` | Branding page (DB + defaults) | Public |
+| `/illustration` | Illustration page (DB + defaults) | Public |
+| `/motion` | Motion page (DB + defaults) | Public |
 | `/realisations` | Portfolio gallery + CTA (DB + defaults) | Public |
 | `/contact` | Static contact + FAQ + stub form | Public |
 | `/sitemap.xml` | Generated from `app/sitemap.ts` | Public |
@@ -230,8 +230,8 @@ Base URL in code: **`https://nounstudio.dz`** (`metadataBase`, sitemap, robots).
 | `/admin/login` | Login form | Public; logged-in **admins** redirect to `/admin` |
 | `/admin/homepage` | Homepage CMS | **Auth + admin** |
 | `/admin/portfolio` | Portfolio CMS | **Auth + admin** |
-| `/admin/architecture` | Architecture CMS | **Auth + admin** |
-| `/admin/branding` | Branding CMS | **Auth + admin** |
+| `/admin/illustration` | Illustration CMS | **Auth + admin** |
+| `/admin/motion` | Motion CMS | **Auth + admin** |
 
 **Middleware** (`matcher: ['/admin/:path*']`):
 
@@ -245,9 +245,9 @@ Base URL in code: **`https://nounstudio.dz`** (`metadataBase`, sitemap, robots).
 
 **Site shell**
 
-- **`SiteHeader`:** Nav links (Accueil, Architecture, Branding, Portfolio, Contact), scroll styling, mobile `Sheet` menu.
+- **`SiteHeader`:** Nav links (Accueil, Illustration, Motion, Portfolio, Contact), scroll styling, mobile `Sheet` menu.
 - **`SiteFooter`:** (file present) site footer content.
-- **`FloatingCTA`:** Mobile-only fixed mailto `contact@nounstudio.dz` after scroll.
+- **`FloatingCTA`:** Mobile-only fixed mailto `addart69@gmail.com` after scroll.
 - **`BackToTop`:** Return to top control.
 - **`ScrollAnimations`:** Mounts `useScrollAnimation` hook (no DOM output).
 
@@ -315,14 +315,14 @@ Base URL in code: **`https://nounstudio.dz`** (`metadataBase`, sitemap, robots).
 
 ## 11. Business context
 
-**Problem solved for the client:** Presents **Noun Studio** as a credible, local-first architecture and branding practice (**Oran / Algeria**, reach to **France**), captures positioning (licensed architect, 70+ visual identities, multidisciplinary studio), and provides a **maintainable CMS** so non-developers (with admin accounts) can update copy and imagery without redeploying static copy.
+**Problem solved for the client:** Presents **AddArt** as an independent illustration and motion design studio based in **Oran, Algérie**, with a distinct cartoon-leaning visual identity and the flexibility to serve clients in Algeria and internationally. Provides a **maintainable CMS** so the artist (with an admin account) can update copy, portfolio entries and imagery without redeploying.
 
 **Inferred requirements from copy and structure:**
 
-- **French-language** primary audience; locale **`fr-DZ`**; emphasis on **Oran** and Algeria for SEO.
-- **Services:** Architecture (residential, commercial, renovation, 3D, site monitoring), branding (logo, identity, guidelines, collateral), cultural content tied to Algerian heritage.
-- **Trust signals:** Stats, testimonials, portfolio, structured data with founder name and email **`contact@nounstudio.dz`**.
-- **Team:** Named roles (architecture lead, graphic design, web/digital) on contact page — aligns with positioning as a small studio.
+- **French-language** primary audience; locale **`fr-DZ`**; emphasis on **Oran** for local presence and international reach for clients.
+- **Services:** Illustration (character design, cartoon art, key art / game covers, commercial graphics, editorial illustration) and motion (short animations, motion design for ads, animated logos, storyboards / animatics).
+- **Trust signals:** Stats, testimonials, portfolio, structured data with placeholder artist name and email **`addart69@gmail.com`**.
+- **Artist:** Solo / small studio positioning — single founding artist referenced as `{{ARTIST_NAME}}` until replaced.
 
 **Deployment:** Not pinned in repo; typical stack would be **Vercel** or similar for Next + env vars, with Supabase project for production data.
 

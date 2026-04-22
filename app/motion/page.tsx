@@ -2,40 +2,35 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import {
-  Building2,
-  Compass,
-  PenTool,
-  HardHat,
+  Film,
+  Megaphone,
+  Sparkles,
+  Clapperboard,
   CheckCircle,
-  Mail,
-  ClipboardList,
-  FileText,
-  Hammer,
-  PartyPopper,
   ArrowRight,
-  Palette,
+  Brush,
+  ClipboardList,
   ChevronRight,
 } from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
-import { mergeArchitectureContent } from "@/lib/content/architecture"
+import { mergeMotionContent } from "@/lib/content/motion"
 
 export const metadata: Metadata = {
-  title: "Architecture & Gestion de Projet",
+  title: "Motion, Animations & Vidéo",
   description:
-    "Services d'architecture par Noun Studio : conception résidentielle et commerciale, rénovation, visualisation 3D et suivi de chantier en Algérie et en France.",
+    "Courtes animations, motion design pour pubs, logos animés et storyboards par AddArt. Studio basé à Oran, Algérie.",
 }
 
-const serviceIcons = [Building2, Compass, PenTool, HardHat]
-const processIcons = [Mail, FileText, Hammer, PartyPopper]
+const serviceIcons = [Film, Megaphone, Sparkles, Clapperboard]
 
-export default async function ArchitecturePage() {
+export default async function MotionPage() {
   const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase
     .from("site_content")
     .select("section, content")
-    .eq("page", "architecture")
-  const content = mergeArchitectureContent(error ? [] : data ?? [])
+    .eq("page", "motion")
+  const content = mergeMotionContent(error ? [] : data ?? [])
 
   return (
     <>
@@ -93,14 +88,14 @@ export default async function ArchitecturePage() {
 
           <div className="mt-16 flex flex-col gap-20">
             {content.services.items.map((service, i) => {
-              const ServiceIcon = serviceIcons[i] ?? Building2
+              const ServiceIcon = serviceIcons[i] ?? Film
               return (
                 <div
                   key={service.title}
                   className={`flex flex-col items-center gap-10 lg:flex-row ${i % 2 === 1 ? "lg:flex-row-reverse" : ""} lg:gap-16`}
                 >
                   <div className="w-full lg:w-1/2">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
                       <ServiceIcon className="h-6 w-6" />
                     </div>
                     <h3 className="mt-4 font-serif text-2xl font-bold text-foreground">{service.title}</h3>
@@ -123,39 +118,6 @@ export default async function ArchitecturePage() {
                       sizes="(max-width: 1024px) 100vw, 50vw"
                     />
                   </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl text-balance">
-              {content.process.title}
-            </h2>
-            <p className="mt-3 text-muted-foreground">{content.process.subtitle}</p>
-          </div>
-
-          <div className="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {content.process.steps.map((step, index) => {
-              const StepIcon = processIcons[index] ?? Mail
-              return (
-                <div
-                  key={step.step}
-                  className="relative flex flex-col items-center rounded-2xl border border-border bg-card p-8 text-center transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:border-primary/20"
-                >
-                  <span className="absolute -top-4 left-6 flex h-8 items-center rounded-full bg-primary px-3.5 text-xs font-bold text-primary-foreground">
-                    {step.step}
-                  </span>
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <StepIcon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mt-4 font-serif text-lg font-bold text-foreground">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
                 </div>
               )
             })}
@@ -192,11 +154,11 @@ export default async function ArchitecturePage() {
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <Link
-              href="/branding"
+              href="/illustration"
               className="group flex items-center gap-6 rounded-2xl border border-border bg-card p-6 transition-all duration-300 ease-out hover:border-primary/30 hover:bg-card/80 hover:-translate-y-1 hover:shadow-lg"
             >
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <Palette className="h-6 w-6" />
+                <Brush className="h-6 w-6" />
               </div>
               <div>
                 <h3 className="font-serif text-lg font-bold text-foreground">

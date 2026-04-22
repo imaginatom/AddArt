@@ -21,8 +21,8 @@ export function FloatingCTA() {
       )}
     >
       <a
-        href="mailto:contact@nounstudio.dz"
-        aria-label="Contacter Noun Studio par email"
+        href="mailto:addart69@gmail.com"
+        aria-label="Contacter AddArt par email"
         className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-200 ease-out hover:scale-110 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <span className="absolute inset-0 rounded-full bg-primary animate-pulse-ring" />

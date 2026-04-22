@@ -25,7 +25,7 @@ export function ContactCtaSection({
             <div className="mt-8 flex flex-col gap-4">
               <a
                 href={`mailto:${content.emailAddress}`}
-                aria-label="Envoyer un email \u00e0 Noun Studio"
+                aria-label="Envoyer un email \u00e0 AddArt"
                 className="flex items-center gap-3 text-primary-foreground/90 transition-colors hover:text-primary-foreground lg:justify-start justify-center"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground/10">

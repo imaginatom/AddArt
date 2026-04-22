@@ -9,12 +9,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import {
-  architecturePageDefaults,
-  architectureSectionOrder,
-  mergeArchitectureContent,
-  type ArchitecturePageContent,
-  type ArchitecturePageSectionKey,
-} from "@/lib/content/architecture"
+  motionPageDefaults,
+  motionSectionOrder,
+  mergeMotionContent,
+  type MotionPageContent,
+  type MotionPageSectionKey,
+} from "@/lib/content/motion"
 
 type SaveState = {
   isSaving: boolean
@@ -22,8 +22,8 @@ type SaveState = {
   error: string | null
 }
 
-const createInitialSaveState = (): Record<ArchitecturePageSectionKey, SaveState> =>
-  architectureSectionOrder.reduce(
+const createInitialSaveState = (): Record<MotionPageSectionKey, SaveState> =>
+  motionSectionOrder.reduce(
     (acc, section) => {
       acc[section] = {
         isSaving: false,
@@ -32,7 +32,7 @@ const createInitialSaveState = (): Record<ArchitecturePageSectionKey, SaveState>
       }
       return acc
     },
-    {} as Record<ArchitecturePageSectionKey, SaveState>,
+    {} as Record<MotionPageSectionKey, SaveState>,
   )
 
 const updateListItem = <T,>(list: T[], index: number, value: T): T[] => {
@@ -41,12 +41,12 @@ const updateListItem = <T,>(list: T[], index: number, value: T): T[] => {
   return next
 }
 
-export default function AdminArchitectureEditor() {
+export default function AdminMotionEditor() {
   const supabase = useMemo(() => createSupabaseBrowserClient(), [])
-  const [content, setContent] = useState<ArchitecturePageContent>(architecturePageDefaults)
+  const [content, setContent] = useState<MotionPageContent>(motionPageDefaults)
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [saveStates, setSaveStates] = useState<Record<ArchitecturePageSectionKey, SaveState>>(
+  const [saveStates, setSaveStates] = useState<Record<MotionPageSectionKey, SaveState>>(
     () => createInitialSaveState(),
   )
 
@@ -58,24 +58,24 @@ export default function AdminArchitectureEditor() {
       const { data, error } = await supabase
         .from("site_content")
         .select("section, content")
-        .eq("page", "architecture")
+        .eq("page", "motion")
 
       if (error) {
-        setLoadError(error.message || "Unable to load architecture content.")
+        setLoadError(error.message || "Unable to load motion content.")
         setIsLoading(false)
         return
       }
 
-      setContent(mergeArchitectureContent(data ?? []))
+      setContent(mergeMotionContent(data ?? []))
       setIsLoading(false)
     }
 
     void loadContent()
   }, [supabase])
 
-  const updateSection = <K extends ArchitecturePageSectionKey>(
+  const updateSection = <K extends MotionPageSectionKey>(
     section: K,
-    updater: (prev: ArchitecturePageContent[K]) => ArchitecturePageContent[K],
+    updater: (prev: MotionPageContent[K]) => MotionPageContent[K],
   ) => {
     setContent((prev) => ({
       ...prev,
@@ -83,7 +83,7 @@ export default function AdminArchitectureEditor() {
     }))
   }
 
-  const setSectionState = (section: ArchitecturePageSectionKey, partial: Partial<SaveState>) => {
+  const setSectionState = (section: MotionPageSectionKey, partial: Partial<SaveState>) => {
     setSaveStates((prev) => ({
       ...prev,
       [section]: {
@@ -93,15 +93,15 @@ export default function AdminArchitectureEditor() {
     }))
   }
 
-  const saveSection = async (section: ArchitecturePageSectionKey) => {
+  const saveSection = async (section: MotionPageSectionKey) => {
     setSectionState(section, { isSaving: true, message: null, error: null })
     const payload = content[section]
-    const sortOrder = architectureSectionOrder.indexOf(section)
+    const sortOrder = motionSectionOrder.indexOf(section)
 
     const { data: existing, error: fetchError } = await supabase
       .from("site_content")
       .select("id")
-      .eq("page", "architecture")
+      .eq("page", "motion")
       .eq("section", section)
       .maybeSingle()
 
@@ -114,7 +114,7 @@ export default function AdminArchitectureEditor() {
     }
 
     const upsertPayload = {
-      page: "architecture",
+      page: "motion",
       section,
       content_type: "text",
       content: payload,
@@ -144,9 +144,9 @@ export default function AdminArchitectureEditor() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin CMS</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Architecture content</h1>
+          <h1 className="mt-2 text-3xl font-semibold text-foreground">Motion content</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Edit architecture page sections. Changes publish immediately after saving.
+            Edit motion page sections. Changes publish immediately after saving.
           </p>
         </div>
       </div>
@@ -159,7 +159,7 @@ export default function AdminArchitectureEditor() {
 
       {isLoading ? (
         <div className="mt-10 rounded-lg border border-border bg-card px-4 py-6 text-sm text-muted-foreground">
-          Loading architecture content...
+          Loading motion content...
         </div>
       ) : (
         <div className="mt-10 space-y-8">
@@ -171,9 +171,9 @@ export default function AdminArchitectureEditor() {
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-hero-title">Title</Label>
+                  <Label htmlFor="motion-hero-title">Title</Label>
                   <Input
-                    id="architecture-hero-title"
+                    id="motion-hero-title"
                     value={content.hero.title}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -184,9 +184,9 @@ export default function AdminArchitectureEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-hero-breadcrumb-home">Breadcrumb home label</Label>
+                  <Label htmlFor="motion-hero-breadcrumb-home">Breadcrumb home label</Label>
                   <Input
-                    id="architecture-hero-breadcrumb-home"
+                    id="motion-hero-breadcrumb-home"
                     value={content.hero.breadcrumbHomeLabel}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -199,9 +199,9 @@ export default function AdminArchitectureEditor() {
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-hero-subtitle">Subtitle</Label>
+                  <Label htmlFor="motion-hero-subtitle">Subtitle</Label>
                   <Textarea
-                    id="architecture-hero-subtitle"
+                    id="motion-hero-subtitle"
                     value={content.hero.subtitle}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -212,9 +212,9 @@ export default function AdminArchitectureEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-hero-breadcrumb-current">Breadcrumb current label</Label>
+                  <Label htmlFor="motion-hero-breadcrumb-current">Breadcrumb current label</Label>
                   <Input
-                    id="architecture-hero-breadcrumb-current"
+                    id="motion-hero-breadcrumb-current"
                     value={content.hero.breadcrumbCurrentLabel}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -244,9 +244,9 @@ export default function AdminArchitectureEditor() {
                   }
                 />
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-hero-bg-alt">Background alt text</Label>
+                  <Label htmlFor="motion-hero-bg-alt">Background alt text</Label>
                   <Input
-                    id="architecture-hero-bg-alt"
+                    id="motion-hero-bg-alt"
                     value={content.hero.backgroundImage.alt}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -281,9 +281,9 @@ export default function AdminArchitectureEditor() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="architecture-intro-title">Title</Label>
+                <Label htmlFor="motion-intro-title">Title</Label>
                 <Input
-                  id="architecture-intro-title"
+                  id="motion-intro-title"
                   value={content.intro.title}
                   onChange={(event) =>
                     updateSection("intro", (prev) => ({
@@ -294,9 +294,9 @@ export default function AdminArchitectureEditor() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="architecture-intro-body">Body</Label>
+                <Label htmlFor="motion-intro-body">Body</Label>
                 <Textarea
-                  id="architecture-intro-body"
+                  id="motion-intro-body"
                   value={content.intro.body}
                   onChange={(event) =>
                     updateSection("intro", (prev) => ({
@@ -328,9 +328,9 @@ export default function AdminArchitectureEditor() {
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-services-title">Title</Label>
+                  <Label htmlFor="motion-services-title">Title</Label>
                   <Input
-                    id="architecture-services-title"
+                    id="motion-services-title"
                     value={content.services.title}
                     onChange={(event) =>
                       updateSection("services", (prev) => ({
@@ -341,9 +341,9 @@ export default function AdminArchitectureEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-services-subtitle">Subtitle</Label>
+                  <Label htmlFor="motion-services-subtitle">Subtitle</Label>
                   <Input
-                    id="architecture-services-subtitle"
+                    id="motion-services-subtitle"
                     value={content.services.subtitle}
                     onChange={(event) =>
                       updateSection("services", (prev) => ({
@@ -356,12 +356,12 @@ export default function AdminArchitectureEditor() {
               </div>
               <div className="space-y-4">
                 {content.services.items.map((service, index) => (
-                  <div key={`architecture-service-${index}`} className="space-y-4 rounded-lg border border-border p-4">
+                  <div key={`motion-service-${index}`} className="space-y-4 rounded-lg border border-border p-4">
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor={`architecture-service-title-${index}`}>Service title</Label>
+                        <Label htmlFor={`motion-service-title-${index}`}>Service title</Label>
                         <Input
-                          id={`architecture-service-title-${index}`}
+                          id={`motion-service-title-${index}`}
                           value={service.title}
                           onChange={(event) =>
                             updateSection("services", (prev) => ({
@@ -375,9 +375,9 @@ export default function AdminArchitectureEditor() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor={`architecture-service-description-${index}`}>Description</Label>
+                        <Label htmlFor={`motion-service-description-${index}`}>Description</Label>
                         <Textarea
-                          id={`architecture-service-description-${index}`}
+                          id={`motion-service-description-${index}`}
                           value={service.description}
                           onChange={(event) =>
                             updateSection("services", (prev) => ({
@@ -396,7 +396,7 @@ export default function AdminArchitectureEditor() {
                       <div className="grid gap-3 md:grid-cols-2">
                         {service.features.map((feature, featureIndex) => (
                           <Input
-                            key={`architecture-service-${index}-feature-${featureIndex}`}
+                            key={`motion-service-${index}-feature-${featureIndex}`}
                             value={feature}
                             onChange={(event) =>
                               updateSection("services", (prev) => ({
@@ -437,9 +437,9 @@ export default function AdminArchitectureEditor() {
                         }
                       />
                       <div className="space-y-2">
-                        <Label htmlFor={`architecture-service-image-alt-${index}`}>Image alt text</Label>
+                        <Label htmlFor={`motion-service-image-alt-${index}`}>Image alt text</Label>
                         <Input
-                          id={`architecture-service-image-alt-${index}`}
+                          id={`motion-service-image-alt-${index}`}
                           value={service.image.alt}
                           onChange={(event) =>
                             updateSection("services", (prev) => ({
@@ -475,119 +475,15 @@ export default function AdminArchitectureEditor() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Process</CardTitle>
-              <CardDescription>Step labels and descriptions.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="architecture-process-title">Title</Label>
-                  <Input
-                    id="architecture-process-title"
-                    value={content.process.title}
-                    onChange={(event) =>
-                      updateSection("process", (prev) => ({
-                        ...prev,
-                        title: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="architecture-process-subtitle">Subtitle</Label>
-                  <Input
-                    id="architecture-process-subtitle"
-                    value={content.process.subtitle}
-                    onChange={(event) =>
-                      updateSection("process", (prev) => ({
-                        ...prev,
-                        subtitle: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-              <div className="space-y-4">
-                {content.process.steps.map((step, index) => (
-                  <div key={`architecture-process-${index}`} className="space-y-3 rounded-lg border border-border p-4">
-                    <div className="grid gap-4 md:grid-cols-3">
-                      <div className="space-y-2">
-                        <Label htmlFor={`architecture-process-step-${index}`}>Step</Label>
-                        <Input
-                          id={`architecture-process-step-${index}`}
-                          value={step.step}
-                          onChange={(event) =>
-                            updateSection("process", (prev) => ({
-                              ...prev,
-                              steps: updateListItem(prev.steps, index, {
-                                ...step,
-                                step: event.target.value,
-                              }),
-                            }))
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor={`architecture-process-title-${index}`}>Title</Label>
-                        <Input
-                          id={`architecture-process-title-${index}`}
-                          value={step.title}
-                          onChange={(event) =>
-                            updateSection("process", (prev) => ({
-                              ...prev,
-                              steps: updateListItem(prev.steps, index, {
-                                ...step,
-                                title: event.target.value,
-                              }),
-                            }))
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor={`architecture-process-description-${index}`}>Description</Label>
-                      <Textarea
-                        id={`architecture-process-description-${index}`}
-                        value={step.description}
-                        onChange={(event) =>
-                          updateSection("process", (prev) => ({
-                            ...prev,
-                            steps: updateListItem(prev.steps, index, {
-                              ...step,
-                              description: event.target.value,
-                            }),
-                          }))
-                        }
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-wrap items-center justify-between gap-3">
-              <Button onClick={() => saveSection("process")} disabled={saveStates.process.isSaving}>
-                {saveStates.process.isSaving ? "Saving..." : "Save process"}
-              </Button>
-              {saveStates.process.error ? (
-                <span className="text-sm text-destructive">{saveStates.process.error}</span>
-              ) : null}
-              {saveStates.process.message ? (
-                <span className="text-sm text-emerald-600">{saveStates.process.message}</span>
-              ) : null}
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
               <CardTitle>CTA</CardTitle>
               <CardDescription>Call-to-action copy above the contact form.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-cta-title">Title</Label>
+                  <Label htmlFor="motion-cta-title">Title</Label>
                   <Input
-                    id="architecture-cta-title"
+                    id="motion-cta-title"
                     value={content.cta.title}
                     onChange={(event) =>
                       updateSection("cta", (prev) => ({
@@ -598,9 +494,9 @@ export default function AdminArchitectureEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="architecture-cta-subtitle">Subtitle</Label>
+                  <Label htmlFor="motion-cta-subtitle">Subtitle</Label>
                   <Input
-                    id="architecture-cta-subtitle"
+                    id="motion-cta-subtitle"
                     value={content.cta.subtitle}
                     onChange={(event) =>
                       updateSection("cta", (prev) => ({
@@ -632,9 +528,9 @@ export default function AdminArchitectureEditor() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="architecture-crosslinks-title">Section title</Label>
+                <Label htmlFor="motion-crosslinks-title">Section title</Label>
                 <Input
-                  id="architecture-crosslinks-title"
+                  id="motion-crosslinks-title"
                   value={content.crossLinks.title}
                   onChange={(event) =>
                     updateSection("crossLinks", (prev) => ({
@@ -646,11 +542,11 @@ export default function AdminArchitectureEditor() {
               </div>
               <div className="space-y-4">
                 {content.crossLinks.cards.map((card, index) => (
-                  <div key={`architecture-crosslink-${index}`} className="space-y-3 rounded-lg border border-border p-4">
+                  <div key={`motion-crosslink-${index}`} className="space-y-3 rounded-lg border border-border p-4">
                     <div className="space-y-2">
-                      <Label htmlFor={`architecture-crosslink-title-${index}`}>Card title</Label>
+                      <Label htmlFor={`motion-crosslink-title-${index}`}>Card title</Label>
                       <Input
-                        id={`architecture-crosslink-title-${index}`}
+                        id={`motion-crosslink-title-${index}`}
                         value={card.title}
                         onChange={(event) =>
                           updateSection("crossLinks", (prev) => ({
@@ -664,9 +560,9 @@ export default function AdminArchitectureEditor() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor={`architecture-crosslink-description-${index}`}>Description</Label>
+                      <Label htmlFor={`motion-crosslink-description-${index}`}>Description</Label>
                       <Textarea
-                        id={`architecture-crosslink-description-${index}`}
+                        id={`motion-crosslink-description-${index}`}
                         value={card.description}
                         onChange={(event) =>
                           updateSection("crossLinks", (prev) => ({

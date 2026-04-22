@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 
-type AdminPageKey = "home" | "portfolio" | "architecture" | "branding"
+type AdminPageKey = "home" | "portfolio" | "illustration" | "motion"
 
 type PageSummary = {
   count: number
@@ -32,24 +32,24 @@ const dashboardPages: Array<{
     href: "/admin/portfolio",
   },
   {
-    key: "architecture",
-    name: "Architecture",
+    key: "illustration",
+    name: "Illustration",
     description: "Hero, services, process steps, and page CTAs.",
-    href: "/admin/architecture",
+    href: "/admin/illustration",
   },
   {
-    key: "branding",
-    name: "Branding",
+    key: "motion",
+    name: "Motion",
     description: "Hero, services, and cross-link content blocks.",
-    href: "/admin/branding",
+    href: "/admin/motion",
   },
 ]
 
 const createInitialSummaries = (): Record<AdminPageKey, PageSummary> => ({
   home: { count: 0, lastUpdated: null },
   portfolio: { count: 0, lastUpdated: null },
-  architecture: { count: 0, lastUpdated: null },
-  branding: { count: 0, lastUpdated: null },
+  illustration: { count: 0, lastUpdated: null },
+  motion: { count: 0, lastUpdated: null },
 })
 
 const formatTimestamp = (value: string | null) =>

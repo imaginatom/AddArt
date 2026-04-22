@@ -12,9 +12,17 @@ export const createSupabaseServerClient = async () => {
         return cookieStore.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          cookieStore.set(name, value, options);
-        });
+        // Next.js 15/16 disallows writing cookies from a Server Component.
+        // The call succeeds inside Server Actions and Route Handlers; in read-
+        // only Server Component contexts it throws and we ignore it. Session
+        // refresh for protected routes is handled by `middleware.ts`.
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Ignored — running in a read-only cookie context.
+        }
       },
     },
   });

@@ -7,9 +7,9 @@ import { createSupabaseServerClient } from "@/lib/supabase/server"
 import { mergePortfolioContent } from "@/lib/content/portfolio"
 
 export const metadata: Metadata = {
-  title: "Portfolio — Projets d'Architecture & Branding",
+  title: "Portfolio \u2014 Illustrations, Jaquettes & Animations",
   description:
-    "D\u00e9couvrez le portfolio de Noun Studio : projets d'architecture r\u00e9sidentielle et commerciale, identit\u00e9s visuelles et design int\u00e9rieur en Alg\u00e9rie et en France.",
+    "D\u00e9couvrez le portfolio d'AddArt : personnages cartoon, jaquettes de jeux, illustrations commerciales et animations courtes r\u00e9alis\u00e9es \u00e0 Oran.",
 }
 
 export default async function RealisationsPage() {

@@ -42,7 +42,7 @@ export function ContactForm() {
             name="nom"
             type="text"
             required
-            placeholder="SAHNOUNE"
+            placeholder="Votre nom"
             aria-required="true"
             className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary focus:shadow-sm"
           />
@@ -56,7 +56,7 @@ export function ContactForm() {
             name="prenom"
             type="text"
             required
-            placeholder="Mohammed"
+            placeholder="Votre pr\u00e9nom"
             aria-required="true"
             className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary focus:shadow-sm"
           />
@@ -101,11 +101,12 @@ export function ContactForm() {
           defaultValue=""
         >
           <option value="" disabled>{"S\u00e9lectionnez un type de projet"}</option>
-          <option value="residential">{"Architecture r\u00e9sidentielle"}</option>
-          <option value="commercial">{"Architecture commerciale"}</option>
-          <option value="renovation">{"R\u00e9novation & Restauration"}</option>
-          <option value="branding">{"Identit\u00e9 visuelle & Branding"}</option>
-          <option value="3d">{"Visualisation 3D"}</option>
+          <option value="character">{"Character design / Cartoon"}</option>
+          <option value="key-art">{"Jaquette de jeu / Key art"}</option>
+          <option value="commercial">{"Graphisme commercial / Pub"}</option>
+          <option value="editorial">{"Illustration \u00e9ditoriale"}</option>
+          <option value="motion">{"Courte animation / Motion design"}</option>
+          <option value="logo-anim">{"Logo anim\u00e9"}</option>
           <option value="autre">{"Autre"}</option>
         </select>
       </div>
@@ -118,7 +119,7 @@ export function ContactForm() {
           name="message"
           rows={5}
           required
-          placeholder={"D\u00e9crivez votre projet, le lieu, vos besoins et votre budget approximatif..."}
+          placeholder={"D\u00e9crivez votre projet, l'univers recherch\u00e9, la plateforme de diffusion et votre budget approximatif..."}
           aria-required="true"
           className="w-full resize-none rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary focus:shadow-sm"
         />
@@ -143,7 +144,7 @@ export function ContactForm() {
         )}
       </Button>
       <p className="text-xs text-muted-foreground">
-        {"En soumettant ce formulaire, vous acceptez d'\u00eatre recontact\u00e9(e) par Noun Studio. Vos donn\u00e9es sont trait\u00e9es confidentiellement."}
+        {"En soumettant ce formulaire, vous acceptez d'\u00eatre recontact\u00e9(e) par AddArt. Vos donn\u00e9es sont trait\u00e9es confidentiellement."}
       </p>
     </form>
   )

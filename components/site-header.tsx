@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils"
 
 const navLinks = [
   { href: "/", label: "Accueil" },
-  { href: "/architecture", label: "Architecture" },
-  { href: "/branding", label: "Branding" },
+  { href: "/illustration", label: "Illustration" },
+  { href: "/motion", label: "Motion" },
   { href: "/realisations", label: "Portfolio" },
   { href: "/contact", label: "Contact" },
 ]
@@ -48,16 +48,16 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 lg:px-8">
         {/* Logo */}
-        <Link href="/" aria-label="Noun Studio \u2014 Accueil" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <span className="text-lg font-bold text-primary-foreground font-serif">N</span>
+        <Link href="/" aria-label="AddArt \u2014 Accueil" className="flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
+            <span className="text-lg font-bold text-accent-foreground font-serif">A</span>
           </div>
           <div className="flex flex-col leading-none">
             <span className={cn(
               "font-serif text-lg font-bold tracking-tight transition-colors",
               isTransparent ? "text-background" : "text-foreground"
             )}>
-              Noun
+              AddArt
             </span>
             <span className={cn(
               "text-xs font-medium tracking-widest uppercase transition-colors",
@@ -104,7 +104,7 @@ export function SiteHeader() {
                 : "border-primary/30 text-primary hover:bg-primary/5 hover:text-primary"
             )}
           >
-            <a href="mailto:contact@nounstudio.dz" aria-label="Envoyer un email">
+            <a href="mailto:addart69@gmail.com" aria-label="Envoyer un email">
               <Mail className="mr-1.5 h-3.5 w-3.5" />
               Contact
             </a>
@@ -134,11 +134,11 @@ export function SiteHeader() {
             <div className="flex flex-col h-full">
               {/* Drawer header */}
               <div className="flex items-center gap-2 border-b border-border px-6 py-5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                  <span className="text-sm font-bold text-primary-foreground font-serif">N</span>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
+                  <span className="text-sm font-bold text-accent-foreground font-serif">A</span>
                 </div>
                 <div className="flex flex-col leading-none">
-                  <span className="font-serif text-base font-bold text-foreground">Noun</span>
+                  <span className="font-serif text-base font-bold text-foreground">AddArt</span>
                   <span className="text-[10px] tracking-widest uppercase text-muted-foreground">Studio</span>
                 </div>
               </div>
@@ -166,9 +166,9 @@ export function SiteHeader() {
               {/* Drawer footer CTAs */}
               <div className="border-t border-border px-4 py-5 flex flex-col gap-3">
                 <Button asChild variant="outline" className="w-full border-primary/30 text-primary bg-transparent hover:bg-primary/5 hover:text-primary">
-                  <a href="mailto:contact@nounstudio.dz" aria-label="Envoyer un email">
+                  <a href="mailto:addart69@gmail.com" aria-label="Envoyer un email">
                     <Mail className="mr-2 h-4 w-4" />
-                    contact@nounstudio.dz
+                    addart69@gmail.com
                   </a>
                 </Button>
                 <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">

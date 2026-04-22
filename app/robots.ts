@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://nounstudio.dz/sitemap.xml",
+    sitemap: "https://addart.dz/sitemap.xml",
   }
 }

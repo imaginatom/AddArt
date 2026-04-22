@@ -1,11 +1,11 @@
 import Link from "next/link"
-import { Building2, Palette, BookOpen, ArrowRight } from "lucide-react"
+import { Brush, Film, Sparkles, ArrowRight } from "lucide-react"
 import { homePageDefaults, type HomePageContent } from "@/lib/content/homepage"
 
 type ServicesContent = HomePageContent["services"]
 
-const serviceIcons = [Building2, Palette, BookOpen]
-const serviceHrefs = ["/architecture", "/branding", "/contact"]
+const serviceIcons = [Brush, Film, Sparkles]
+const serviceHrefs = ["/illustration", "/motion", "/contact"]
 
 export function ServicesOverview({
   content = homePageDefaults.services,
@@ -33,7 +33,7 @@ export function ServicesOverview({
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                 {(() => {
-                  const Icon = serviceIcons[index] ?? Building2
+                  const Icon = serviceIcons[index] ?? Brush
                   return <Icon className="h-6 w-6" />
                 })()}
               </div>

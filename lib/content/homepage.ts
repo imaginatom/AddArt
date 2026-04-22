@@ -92,122 +92,123 @@ export const homePageSectionOrder: HomePageSectionKey[] = [
 
 export const homePageDefaults: HomePageContent = {
   hero: {
-    badgeText: 'Architecture · Branding · Contenu culturel',
-    title: 'Architecture, Design & Identité Culturelle',
+    badgeText: 'Illustration · Motion · Graphismes Commerciaux',
+    title: 'Illustration, Motion & Direction Artistique',
     subtitle:
-      "Noun Studio est un cabinet d'architecture et studio de design multidisciplinaire fondé par SAHNOUNE Mohammed. Nous concevons des espaces, des marques et des histoires.",
+      "AddArt est un studio d'illustration et de motion design fondé par {{ARTIST_NAME}}. Nous créons des personnages, des jaquettes de jeux, des visuels publicitaires et de courtes animations.",
     trustBullets: [
-      'Architecte agréé',
-      'Plus de 70 identités visuelles livrées',
-      'Projets en Algérie et en France',
-      'Accompagnement du diagnostic à la livraison',
+      'Illustrations cartoon & character design',
+      'Jaquettes de jeux & key art',
+      'Motion design & animations courtes',
+      'Graphismes pour pubs et campagnes',
     ],
     primaryCtaLabel: 'Découvrir nos services',
-    secondaryCtaLabel: 'Portfolio',
+    secondaryCtaLabel: 'Voir le portfolio',
     backgroundImage: {
       src: '/images/hero-bg.jpg',
-      alt: 'Architecture contemporaine par Noun Studio',
+      alt: 'Illustrations colorées et scènes cartoon par AddArt',
     },
   },
   socialProof: {
     stats: [
-      { value: 'Architecte', label: 'agréée' },
-      { value: '70+', label: 'identités visuelles' },
-      { value: '2', label: "pays d'activité" },
-      { value: '3', label: 'experts en studio' },
+      { value: '100+', label: 'illustrations livrées' },
+      { value: '30+', label: 'jaquettes & key art' },
+      { value: '50+', label: 'animations courtes' },
+      { value: '7', label: "ans d'expérience" },
     ],
   },
   services: {
     eyebrow: 'Nos expertises',
-    title: 'Un studio multidisciplinaire au service de vos projets',
+    title: 'Un studio visuel au service de vos projets',
     items: [
       {
-        title: 'Architecture',
+        title: 'Illustration & Cartoon Art',
         description:
-          'Conception et suivi de projets architecturaux résidentiels, commerciaux et de rénovation. Du diagnostic à la livraison.',
+          "Character design, illustrations cartoon, key art et graphismes commerciaux. Un style expressif, coloré et taillé pour capter l'attention.",
       },
       {
-        title: 'Identité Visuelle',
+        title: 'Motion & Animations',
         description:
-          "Création de logos, systèmes d'identité, chartes graphiques et kits de communication pour entreprises et startups.",
+          "Courtes animations, motion design pour pubs, logos animés et storyboards. De l'idée à la vidéo finale prête à diffuser.",
       },
       {
-        title: 'Contenu Culturel',
+        title: 'Commandes sur-mesure',
         description:
-          "Production de contenu autour de l'architecture, du patrimoine algérien et de la culture du design.",
+          "Briefs créatifs, collaborations studio et projets hybrides. Parlons ensemble de votre univers et de l'effet recherché.",
       },
     ],
   },
   whyUs: {
     eyebrow: 'Notre approche',
-    title: 'Pourquoi choisir Noun Studio ?',
+    title: 'Pourquoi travailler avec AddArt ?',
     image: {
       src: '/images/why-us.jpg',
-      alt: 'Architecte SAHNOUNE Mohammed au travail chez Noun Studio',
+      alt: "L'artiste AddArt au travail sur une illustration cartoon",
     },
     floatingBadge: {
-      value: '70+',
-      label: 'clients satisfaits',
+      value: '180+',
+      label: 'projets livrés',
     },
     benefits: [
       {
-        title: 'Expertise technique',
+        title: 'Style distinct',
         description:
-          'Architecte agréé avec une maîtrise complète du cycle projet.',
+          "Un univers cartoon reconnaissable, taillé pour le divertissement, le jeu vidéo et les marques audacieuses.",
       },
       {
-        title: 'Sensibilité culturelle',
+        title: 'Polyvalence',
         description:
-          'Chaque projet intègre une dimension identitaire et patrimoniale.',
+          "De l'illustration statique à la courte animation, une seule équipe pour un résultat cohérent.",
       },
       {
-        title: 'Vision stratégique',
-        description: "L'architecture comme outil de branding et d'expression.",
+        title: 'Direction artistique',
+        description:
+          "Chaque projet est piloté comme une mini-direction artistique : cohérence, lisibilité, impact.",
       },
       {
-        title: 'Écoute & sur-mesure',
+        title: 'Collaboration fluide',
         description:
-          'Des solutions personnalisées selon vos besoins et votre contexte.',
+          "Itérations rapides, briefs clairs, fichiers livrés dans tous les formats dont vous avez besoin.",
       },
       {
-        title: 'Approche intégrée',
+        title: 'Respect des délais',
         description:
-          'Architecture, design et contenu dans une seule démarche cohérente.',
+          "Planning par jalons et communication constante — pas de mauvaises surprises en fin de projet.",
       },
     ],
     ctaLabel: 'Discutons de votre projet',
   },
   testimonials: {
     eyebrow: 'Témoignages',
-    title: 'Ce que disent nos clients',
+    title: 'Ce que disent les clients',
     items: [
       {
         stars: 5,
-        text: "Noun Studio a conçu notre villa avec une sensibilité remarquable. Le projet respecte notre identité tout en apportant une modernité élégante. Un travail d'architecte exceptionnel.",
+        text: "AddArt a créé les personnages et la jaquette de notre jeu mobile. Le style cartoon est exactement ce qu'on voulait — expressif, coloré, et reconnaissable en un coup d'œil.",
         name: 'Karim B.',
-        city: 'Alger',
-      },
-      {
-        stars: 5,
-        text: "L'identité visuelle créée pour notre startup est parfaite. Le logo, la charte graphique et les supports de communication sont cohérents et professionnels. Un vrai partenaire stratégique.",
-        name: 'Amina H.',
         city: 'Oran',
       },
       {
         stars: 5,
-        text: "La rénovation de notre espace commercial a complètement transformé notre image. Mohammed et son équipe comprennent parfaitement la relation entre architecture et identité de marque.",
+        text: "On a collaboré sur une courte animation pour une campagne publicitaire. Motion design impeccable, timing parfait, et une vraie patte visuelle. On revient sur tous nos projets.",
+        name: 'Amina H.',
+        city: 'Alger',
+      },
+      {
+        stars: 5,
+        text: "Brief flou au départ, résultat clair à l'arrivée. Les illustrations commerciales livrées pour notre marque ont directement boosté nos performances sur les réseaux sociaux.",
         name: 'Yacine M.',
         city: 'Constantine',
       },
       {
         stars: 5,
-        text: "Nous avons fait appel à Noun Studio pour le branding complet de notre restaurant. Du nom à la décoration intérieure, tout est pensé avec cohérence. Résultat impeccable.",
+        text: "Character design fantastique pour notre série d'animations courtes. Les personnages ont une vraie personnalité et se déclinent parfaitement sur tous les supports.",
         name: 'Sara T.',
-        city: 'Alger',
+        city: 'Oran',
       },
       {
         stars: 5,
-        text: "Le suivi de chantier par Noun Studio est rigoureux et transparent. Chaque étape est documentée, les délais respectés et la qualité irréprochable. Je recommande vivement.",
+        text: "Livraison rapide, révisions prises en compte sans broncher, fichiers impeccables. Le mix illustration + motion sous un même toit simplifie vraiment la vie.",
         name: 'Djamel F.',
         city: 'Blida',
       },
@@ -215,38 +216,38 @@ export const homePageDefaults: HomePageContent = {
   },
   galleryPreview: {
     eyebrow: 'Portfolio',
-    title: 'Nos réalisations',
-    subtitle: 'Des projets qui témoignent de notre savoir-faire',
+    title: 'Quelques créations récentes',
+    subtitle: 'Personnages, jaquettes de jeux, illustrations et frames animées',
     ctaLabel: 'Voir tout le portfolio',
   },
   localSeo: {
     eyebrow: 'Présence locale',
     title: 'Basé à Oran, Algérie',
     body:
-      "Noun Studio est implanté à Oran et intervient à travers l'Algérie. Notre positionnement combine l'expertise technique en architecture avec le développement d'identités visuelles et la création de contenu culturel lié au patrimoine architectural algérien.",
+      "AddArt est installé à Oran et collabore avec des studios, éditeurs de jeux, agences et marques partout en Algérie et à l'international. Nos créations — illustration, motion, direction artistique — sont pensées pour voyager aussi bien sur mobile que sur grand écran.",
     highlights: [
       {
-        title: 'Architecture à Oran',
+        title: 'Illustration à Oran',
         description:
-          'Résidentiel, commercial et rénovation à Oran. Des projets ancrés dans le patrimoine local avec une vision contemporaine.',
+          "Character design, cartoons et key art livrés pour des clients locaux, nationaux et internationaux depuis Oran.",
       },
       {
-        title: 'Branding à Oran',
+        title: 'Motion design',
         description:
-          'Identités visuelles et direction artistique pour des marques locales et nationales.',
+          "Courtes animations, motion pour pubs et réseaux sociaux. Des livrables prêts à diffuser en 1080p ou 4K.",
       },
       {
-        title: 'Contenu culturel',
+        title: 'Graphismes & Game Covers',
         description:
-          "Production de contenu autour de l'architecture algérienne, du patrimoine et de la culture du design.",
+          "Jaquettes de jeux, affiches, bannières et campagnes. Un univers cartoon qui fonctionne aussi sur étagère qu'en feed.",
       },
     ],
   },
   contactCta: {
     title: 'Parlons de votre projet',
-    subtitle: 'Consultation gratuite — réponse garantie sous 48h',
+    subtitle: 'Devis gratuit — réponse sous 48 h',
     emailLabel: 'Email',
-    emailAddress: 'contact@nounstudio.dz',
+    emailAddress: 'addart69@gmail.com',
   },
 }
 

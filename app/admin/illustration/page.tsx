@@ -9,12 +9,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import {
-  brandingPageDefaults,
-  brandingSectionOrder,
-  mergeBrandingContent,
-  type BrandingPageContent,
-  type BrandingPageSectionKey,
-} from "@/lib/content/branding"
+  illustrationPageDefaults,
+  illustrationSectionOrder,
+  mergeIllustrationContent,
+  type IllustrationPageContent,
+  type IllustrationPageSectionKey,
+} from "@/lib/content/illustration"
 
 type SaveState = {
   isSaving: boolean
@@ -22,8 +22,8 @@ type SaveState = {
   error: string | null
 }
 
-const createInitialSaveState = (): Record<BrandingPageSectionKey, SaveState> =>
-  brandingSectionOrder.reduce(
+const createInitialSaveState = (): Record<IllustrationPageSectionKey, SaveState> =>
+  illustrationSectionOrder.reduce(
     (acc, section) => {
       acc[section] = {
         isSaving: false,
@@ -32,7 +32,7 @@ const createInitialSaveState = (): Record<BrandingPageSectionKey, SaveState> =>
       }
       return acc
     },
-    {} as Record<BrandingPageSectionKey, SaveState>,
+    {} as Record<IllustrationPageSectionKey, SaveState>,
   )
 
 const updateListItem = <T,>(list: T[], index: number, value: T): T[] => {
@@ -41,12 +41,12 @@ const updateListItem = <T,>(list: T[], index: number, value: T): T[] => {
   return next
 }
 
-export default function AdminBrandingEditor() {
+export default function AdminIllustrationEditor() {
   const supabase = useMemo(() => createSupabaseBrowserClient(), [])
-  const [content, setContent] = useState<BrandingPageContent>(brandingPageDefaults)
+  const [content, setContent] = useState<IllustrationPageContent>(illustrationPageDefaults)
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [saveStates, setSaveStates] = useState<Record<BrandingPageSectionKey, SaveState>>(
+  const [saveStates, setSaveStates] = useState<Record<IllustrationPageSectionKey, SaveState>>(
     () => createInitialSaveState(),
   )
 
@@ -58,24 +58,24 @@ export default function AdminBrandingEditor() {
       const { data, error } = await supabase
         .from("site_content")
         .select("section, content")
-        .eq("page", "branding")
+        .eq("page", "illustration")
 
       if (error) {
-        setLoadError(error.message || "Unable to load branding content.")
+        setLoadError(error.message || "Unable to load illustration content.")
         setIsLoading(false)
         return
       }
 
-      setContent(mergeBrandingContent(data ?? []))
+      setContent(mergeIllustrationContent(data ?? []))
       setIsLoading(false)
     }
 
     void loadContent()
   }, [supabase])
 
-  const updateSection = <K extends BrandingPageSectionKey>(
+  const updateSection = <K extends IllustrationPageSectionKey>(
     section: K,
-    updater: (prev: BrandingPageContent[K]) => BrandingPageContent[K],
+    updater: (prev: IllustrationPageContent[K]) => IllustrationPageContent[K],
   ) => {
     setContent((prev) => ({
       ...prev,
@@ -83,7 +83,7 @@ export default function AdminBrandingEditor() {
     }))
   }
 
-  const setSectionState = (section: BrandingPageSectionKey, partial: Partial<SaveState>) => {
+  const setSectionState = (section: IllustrationPageSectionKey, partial: Partial<SaveState>) => {
     setSaveStates((prev) => ({
       ...prev,
       [section]: {
@@ -93,15 +93,15 @@ export default function AdminBrandingEditor() {
     }))
   }
 
-  const saveSection = async (section: BrandingPageSectionKey) => {
+  const saveSection = async (section: IllustrationPageSectionKey) => {
     setSectionState(section, { isSaving: true, message: null, error: null })
     const payload = content[section]
-    const sortOrder = brandingSectionOrder.indexOf(section)
+    const sortOrder = illustrationSectionOrder.indexOf(section)
 
     const { data: existing, error: fetchError } = await supabase
       .from("site_content")
       .select("id")
-      .eq("page", "branding")
+      .eq("page", "illustration")
       .eq("section", section)
       .maybeSingle()
 
@@ -114,7 +114,7 @@ export default function AdminBrandingEditor() {
     }
 
     const upsertPayload = {
-      page: "branding",
+      page: "illustration",
       section,
       content_type: "text",
       content: payload,
@@ -144,9 +144,9 @@ export default function AdminBrandingEditor() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin CMS</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Branding content</h1>
+          <h1 className="mt-2 text-3xl font-semibold text-foreground">Illustration content</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Edit branding page sections. Changes publish immediately after saving.
+            Edit illustration page sections. Changes publish immediately after saving.
           </p>
         </div>
       </div>
@@ -159,7 +159,7 @@ export default function AdminBrandingEditor() {
 
       {isLoading ? (
         <div className="mt-10 rounded-lg border border-border bg-card px-4 py-6 text-sm text-muted-foreground">
-          Loading branding content...
+          Loading illustration content...
         </div>
       ) : (
         <div className="mt-10 space-y-8">
@@ -171,9 +171,9 @@ export default function AdminBrandingEditor() {
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="branding-hero-title">Title</Label>
+                  <Label htmlFor="illustration-hero-title">Title</Label>
                   <Input
-                    id="branding-hero-title"
+                    id="illustration-hero-title"
                     value={content.hero.title}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -184,9 +184,9 @@ export default function AdminBrandingEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="branding-hero-breadcrumb-home">Breadcrumb home label</Label>
+                  <Label htmlFor="illustration-hero-breadcrumb-home">Breadcrumb home label</Label>
                   <Input
-                    id="branding-hero-breadcrumb-home"
+                    id="illustration-hero-breadcrumb-home"
                     value={content.hero.breadcrumbHomeLabel}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -199,9 +199,9 @@ export default function AdminBrandingEditor() {
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="branding-hero-subtitle">Subtitle</Label>
+                  <Label htmlFor="illustration-hero-subtitle">Subtitle</Label>
                   <Textarea
-                    id="branding-hero-subtitle"
+                    id="illustration-hero-subtitle"
                     value={content.hero.subtitle}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -212,9 +212,9 @@ export default function AdminBrandingEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="branding-hero-breadcrumb-current">Breadcrumb current label</Label>
+                  <Label htmlFor="illustration-hero-breadcrumb-current">Breadcrumb current label</Label>
                   <Input
-                    id="branding-hero-breadcrumb-current"
+                    id="illustration-hero-breadcrumb-current"
                     value={content.hero.breadcrumbCurrentLabel}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -244,9 +244,9 @@ export default function AdminBrandingEditor() {
                   }
                 />
                 <div className="space-y-2">
-                  <Label htmlFor="branding-hero-bg-alt">Background alt text</Label>
+                  <Label htmlFor="illustration-hero-bg-alt">Background alt text</Label>
                   <Input
-                    id="branding-hero-bg-alt"
+                    id="illustration-hero-bg-alt"
                     value={content.hero.backgroundImage.alt}
                     onChange={(event) =>
                       updateSection("hero", (prev) => ({
@@ -281,9 +281,9 @@ export default function AdminBrandingEditor() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="branding-intro-title">Title</Label>
+                <Label htmlFor="illustration-intro-title">Title</Label>
                 <Input
-                  id="branding-intro-title"
+                  id="illustration-intro-title"
                   value={content.intro.title}
                   onChange={(event) =>
                     updateSection("intro", (prev) => ({
@@ -294,9 +294,9 @@ export default function AdminBrandingEditor() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="branding-intro-body">Body</Label>
+                <Label htmlFor="illustration-intro-body">Body</Label>
                 <Textarea
-                  id="branding-intro-body"
+                  id="illustration-intro-body"
                   value={content.intro.body}
                   onChange={(event) =>
                     updateSection("intro", (prev) => ({
@@ -328,9 +328,9 @@ export default function AdminBrandingEditor() {
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="branding-services-title">Title</Label>
+                  <Label htmlFor="illustration-services-title">Title</Label>
                   <Input
-                    id="branding-services-title"
+                    id="illustration-services-title"
                     value={content.services.title}
                     onChange={(event) =>
                       updateSection("services", (prev) => ({
@@ -341,9 +341,9 @@ export default function AdminBrandingEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="branding-services-subtitle">Subtitle</Label>
+                  <Label htmlFor="illustration-services-subtitle">Subtitle</Label>
                   <Input
-                    id="branding-services-subtitle"
+                    id="illustration-services-subtitle"
                     value={content.services.subtitle}
                     onChange={(event) =>
                       updateSection("services", (prev) => ({
@@ -356,12 +356,12 @@ export default function AdminBrandingEditor() {
               </div>
               <div className="space-y-4">
                 {content.services.items.map((service, index) => (
-                  <div key={`branding-service-${index}`} className="space-y-4 rounded-lg border border-border p-4">
+                  <div key={`illustration-service-${index}`} className="space-y-4 rounded-lg border border-border p-4">
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor={`branding-service-title-${index}`}>Service title</Label>
+                        <Label htmlFor={`illustration-service-title-${index}`}>Service title</Label>
                         <Input
-                          id={`branding-service-title-${index}`}
+                          id={`illustration-service-title-${index}`}
                           value={service.title}
                           onChange={(event) =>
                             updateSection("services", (prev) => ({
@@ -375,9 +375,9 @@ export default function AdminBrandingEditor() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor={`branding-service-description-${index}`}>Description</Label>
+                        <Label htmlFor={`illustration-service-description-${index}`}>Description</Label>
                         <Textarea
-                          id={`branding-service-description-${index}`}
+                          id={`illustration-service-description-${index}`}
                           value={service.description}
                           onChange={(event) =>
                             updateSection("services", (prev) => ({
@@ -396,7 +396,7 @@ export default function AdminBrandingEditor() {
                       <div className="grid gap-3 md:grid-cols-2">
                         {service.features.map((feature, featureIndex) => (
                           <Input
-                            key={`branding-service-${index}-feature-${featureIndex}`}
+                            key={`illustration-service-${index}-feature-${featureIndex}`}
                             value={feature}
                             onChange={(event) =>
                               updateSection("services", (prev) => ({
@@ -437,9 +437,9 @@ export default function AdminBrandingEditor() {
                         }
                       />
                       <div className="space-y-2">
-                        <Label htmlFor={`branding-service-image-alt-${index}`}>Image alt text</Label>
+                        <Label htmlFor={`illustration-service-image-alt-${index}`}>Image alt text</Label>
                         <Input
-                          id={`branding-service-image-alt-${index}`}
+                          id={`illustration-service-image-alt-${index}`}
                           value={service.image.alt}
                           onChange={(event) =>
                             updateSection("services", (prev) => ({
@@ -475,15 +475,119 @@ export default function AdminBrandingEditor() {
 
           <Card>
             <CardHeader>
+              <CardTitle>Process</CardTitle>
+              <CardDescription>Step labels and descriptions.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="illustration-process-title">Title</Label>
+                  <Input
+                    id="illustration-process-title"
+                    value={content.process.title}
+                    onChange={(event) =>
+                      updateSection("process", (prev) => ({
+                        ...prev,
+                        title: event.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="illustration-process-subtitle">Subtitle</Label>
+                  <Input
+                    id="illustration-process-subtitle"
+                    value={content.process.subtitle}
+                    onChange={(event) =>
+                      updateSection("process", (prev) => ({
+                        ...prev,
+                        subtitle: event.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="space-y-4">
+                {content.process.steps.map((step, index) => (
+                  <div key={`illustration-process-${index}`} className="space-y-3 rounded-lg border border-border p-4">
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <div className="space-y-2">
+                        <Label htmlFor={`illustration-process-step-${index}`}>Step</Label>
+                        <Input
+                          id={`illustration-process-step-${index}`}
+                          value={step.step}
+                          onChange={(event) =>
+                            updateSection("process", (prev) => ({
+                              ...prev,
+                              steps: updateListItem(prev.steps, index, {
+                                ...step,
+                                step: event.target.value,
+                              }),
+                            }))
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor={`illustration-process-title-${index}`}>Title</Label>
+                        <Input
+                          id={`illustration-process-title-${index}`}
+                          value={step.title}
+                          onChange={(event) =>
+                            updateSection("process", (prev) => ({
+                              ...prev,
+                              steps: updateListItem(prev.steps, index, {
+                                ...step,
+                                title: event.target.value,
+                              }),
+                            }))
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`illustration-process-description-${index}`}>Description</Label>
+                      <Textarea
+                        id={`illustration-process-description-${index}`}
+                        value={step.description}
+                        onChange={(event) =>
+                          updateSection("process", (prev) => ({
+                            ...prev,
+                            steps: updateListItem(prev.steps, index, {
+                              ...step,
+                              description: event.target.value,
+                            }),
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+            <CardFooter className="flex flex-wrap items-center justify-between gap-3">
+              <Button onClick={() => saveSection("process")} disabled={saveStates.process.isSaving}>
+                {saveStates.process.isSaving ? "Saving..." : "Save process"}
+              </Button>
+              {saveStates.process.error ? (
+                <span className="text-sm text-destructive">{saveStates.process.error}</span>
+              ) : null}
+              {saveStates.process.message ? (
+                <span className="text-sm text-emerald-600">{saveStates.process.message}</span>
+              ) : null}
+            </CardFooter>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>CTA</CardTitle>
               <CardDescription>Call-to-action copy above the contact form.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="branding-cta-title">Title</Label>
+                  <Label htmlFor="illustration-cta-title">Title</Label>
                   <Input
-                    id="branding-cta-title"
+                    id="illustration-cta-title"
                     value={content.cta.title}
                     onChange={(event) =>
                       updateSection("cta", (prev) => ({
@@ -494,9 +598,9 @@ export default function AdminBrandingEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="branding-cta-subtitle">Subtitle</Label>
+                  <Label htmlFor="illustration-cta-subtitle">Subtitle</Label>
                   <Input
-                    id="branding-cta-subtitle"
+                    id="illustration-cta-subtitle"
                     value={content.cta.subtitle}
                     onChange={(event) =>
                       updateSection("cta", (prev) => ({
@@ -528,9 +632,9 @@ export default function AdminBrandingEditor() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="branding-crosslinks-title">Section title</Label>
+                <Label htmlFor="illustration-crosslinks-title">Section title</Label>
                 <Input
-                  id="branding-crosslinks-title"
+                  id="illustration-crosslinks-title"
                   value={content.crossLinks.title}
                   onChange={(event) =>
                     updateSection("crossLinks", (prev) => ({
@@ -542,11 +646,11 @@ export default function AdminBrandingEditor() {
               </div>
               <div className="space-y-4">
                 {content.crossLinks.cards.map((card, index) => (
-                  <div key={`branding-crosslink-${index}`} className="space-y-3 rounded-lg border border-border p-4">
+                  <div key={`illustration-crosslink-${index}`} className="space-y-3 rounded-lg border border-border p-4">
                     <div className="space-y-2">
-                      <Label htmlFor={`branding-crosslink-title-${index}`}>Card title</Label>
+                      <Label htmlFor={`illustration-crosslink-title-${index}`}>Card title</Label>
                       <Input
-                        id={`branding-crosslink-title-${index}`}
+                        id={`illustration-crosslink-title-${index}`}
                         value={card.title}
                         onChange={(event) =>
                           updateSection("crossLinks", (prev) => ({
@@ -560,9 +664,9 @@ export default function AdminBrandingEditor() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor={`branding-crosslink-description-${index}`}>Description</Label>
+                      <Label htmlFor={`illustration-crosslink-description-${index}`}>Description</Label>
                       <Textarea
-                        id={`branding-crosslink-description-${index}`}
+                        id={`illustration-crosslink-description-${index}`}
                         value={card.description}
                         onChange={(event) =>
                           updateSection("crossLinks", (prev) => ({

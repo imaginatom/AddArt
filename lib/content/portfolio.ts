@@ -37,136 +37,145 @@ export const portfolioSectionOrder: PortfolioPageSectionKey[] = ["hero", "galler
 export const portfolioPageDefaults: PortfolioPageContent = {
   hero: {
     eyebrow: "Portfolio",
-    title: "Nos Réalisations",
+    title: "Nos créations",
     subtitle:
-      "Projets d'architecture, d'identité visuelle et de design réalisés en Algérie et en France.",
+      "Personnages, jaquettes de jeux, illustrations commerciales et frames animées. Une sélection de projets réalisés pour des studios, marques et éditeurs.",
     breadcrumbHomeLabel: "Accueil",
     breadcrumbCurrentLabel: "Portfolio",
   },
   gallery: {
-    categories: ["Tous", "Architecture", "Branding", "Intérieur", "Rénovation"],
+    categories: ["Tous", "Cartoons", "Game Covers", "Commercial", "Motion", "Editorial"],
     projects: [
       {
-        title: "Villa Contemporaine",
+        title: "Mascotte Cartoon",
         description:
-          "Conception complète d'une villa résidentielle avec terrasse panoramique et jardin méditerranéen.",
-        location: "Alger",
-        category: "Architecture",
+          "Création d'une mascotte pour une marque lifestyle : silhouette, expressions et déclinaisons pour réseaux sociaux.",
+        location: "Oran",
+        category: "Cartoons",
         image: {
           src: "/images/gallery-1.jpg",
-          alt: "Villa résidentielle contemporaine en Algérie par Noun Studio",
+          alt: "Mascotte cartoon colorée par AddArt",
         },
       },
       {
-        title: "Branding Startup Tech",
-        description: "Logo, charte graphique et supports de communication pour une startup technologique.",
-        location: "Oran",
-        category: "Branding",
+        title: "Jaquette Indie Game",
+        description:
+          "Key art et jaquette pour un jeu indépendant : composition cinématique et déclinaisons store.",
+        location: "Alger",
+        category: "Game Covers",
         image: {
           src: "/images/gallery-2.jpg",
-          alt: "Identité visuelle pour startup par Noun Studio",
+          alt: "Jaquette de jeu indie par AddArt",
         },
       },
       {
-        title: "Espace Commercial",
-        description: "Aménagement intérieur d'un espace de coworking avec identité architecturale forte.",
-        location: "Alger",
-        category: "Intérieur",
+        title: "Campagne Pub Restaurant",
+        description:
+          "Série d'illustrations pour une campagne publicitaire : affiches, displays et posts animés.",
+        location: "Oran",
+        category: "Commercial",
         image: {
           src: "/images/gallery-3.jpg",
-          alt: "Aménagement intérieur espace commercial par Noun Studio",
+          alt: "Illustration publicitaire pour restaurant par AddArt",
         },
       },
       {
-        title: "Restauration Patrimoniale",
-        description: "Rénovation d'un bâtiment historique avec intégration d'éléments contemporains.",
-        location: "Constantine",
-        category: "Rénovation",
+        title: "Character Design Série",
+        description:
+          "Conception de la distribution pour une série courte d'animations : 6 personnages principaux.",
+        location: "Oran",
+        category: "Cartoons",
         image: {
           src: "/images/gallery-4.jpg",
-          alt: "Rénovation patrimoine architectural algérien par Noun Studio",
+          alt: "Character design série animée par AddArt",
         },
       },
       {
-        title: "Résidence Moderne",
+        title: "Intro Animée YouTube",
         description:
-          "Conception d'une résidence familiale aux lignes épurées avec optimisation de la lumière naturelle.",
-        location: "Blida",
-        category: "Architecture",
+          "Intro animée 5s pour chaîne YouTube : logo reveal, effet cartoon et jingle sonore.",
+        location: "Alger",
+        category: "Motion",
         image: {
           src: "/images/hero-bg.jpg",
-          alt: "Architecture contemporaine par Noun Studio",
+          alt: "Intro animée cartoon par AddArt",
         },
       },
       {
-        title: "Boutique Retail",
-        description: "Design intérieur d'une boutique haut de gamme avec mise en scène des produits.",
-        location: "Alger",
-        category: "Intérieur",
+        title: "Jaquette Jeu Mobile",
+        description:
+          "Key art et déclinaisons store (App Store, Google Play) pour un jeu mobile cartoon.",
+        location: "Oran",
+        category: "Game Covers",
         image: {
           src: "/images/gallery-6.jpg",
-          alt: "Design intérieur boutique par Noun Studio",
+          alt: "Jaquette jeu mobile par AddArt",
         },
       },
       {
-        title: "Branding Restaurant",
-        description: "Création d'identité complète pour un restaurant : du nom à la décoration intérieure.",
+        title: "Série Illustrations Sociales",
+        description:
+          "Illustrations hebdomadaires pour le feed d'une marque : thème récurrent et ton humoristique.",
         location: "Oran",
-        category: "Branding",
+        category: "Commercial",
         image: {
           src: "/images/elagage-hero.jpg",
-          alt: "Identité visuelle restaurant par Noun Studio",
+          alt: "Illustrations réseaux sociaux par AddArt",
         },
       },
       {
-        title: "Visualisation 3D",
-        description: "Rendu 3D photoréaliste d'un projet de villa avec piscine avant construction.",
-        location: "Alger",
-        category: "Architecture",
+        title: "Motion Ad 15s",
+        description:
+          "Publicité animée 15 secondes pour Instagram Reels et TikTok, adaptée en formats carré et vertical.",
+        location: "Constantine",
+        category: "Motion",
         image: {
           src: "/images/gallery-5.jpg",
-          alt: "Visualisation 3D villa par Noun Studio",
+          alt: "Publicité animée courte par AddArt",
         },
       },
       {
-        title: "Identité Cabinet Médical",
-        description: "Branding complet pour un cabinet médical : logo, signalétique et décoration intérieure.",
-        location: "Constantine",
-        category: "Branding",
+        title: "Couverture Livre Illustré",
+        description:
+          "Couverture et illustrations intérieures pour un livre jeunesse : direction artistique complète.",
+        location: "Alger",
+        category: "Editorial",
         image: {
           src: "/images/why-us.jpg",
-          alt: "Studio d'architecture Noun Studio",
+          alt: "Couverture livre illustré par AddArt",
         },
       },
       {
-        title: "Complexe Résidentiel",
-        description: "Conception architecturale d'un ensemble résidentiel de 12 logements.",
-        location: "Blida",
-        category: "Architecture",
+        title: "Poster Cartoon Événement",
+        description:
+          "Affiche illustrée pour un événement culturel : 3 déclinaisons et supports print.",
+        location: "Oran",
+        category: "Commercial",
         image: {
           src: "/images/paysagiste-hero.jpg",
-          alt: "Plans architecturaux par Noun Studio",
+          alt: "Poster cartoon événement par AddArt",
         },
       },
       {
-        title: "Siège Social",
-        description: "Rénovation et aménagement du siège social d'une entreprise de services.",
+        title: "Logo Animé Startup",
+        description:
+          "Animation 3 secondes du logo pour intros vidéo, splash screens et signatures d'email.",
         location: "Alger",
-        category: "Rénovation",
+        category: "Motion",
         image: {
           src: "/images/contact-hero.jpg",
-          alt: "Aménagement bureaux par Noun Studio",
+          alt: "Animation logo startup par AddArt",
         },
       },
     ],
   },
   cta: {
     title: "Votre projet est le prochain ?",
-    subtitle: "Contactez-nous pour discuter de votre projet et obtenir une consultation gratuite.",
+    subtitle: "Contactez-nous pour parler de votre idée — devis gratuit et sans engagement.",
     primaryCtaLabel: "Discutons ensemble",
     primaryCtaHref: "/contact",
-    emailLabel: "contact@nounstudio.dz",
-    emailAddress: "contact@nounstudio.dz",
+    emailLabel: "addart69@gmail.com",
+    emailAddress: "addart69@gmail.com",
   },
 }
 

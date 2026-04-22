@@ -12,9 +12,9 @@ import { mergeHomePageContent } from "@/lib/content/homepage"
 import { mergePortfolioContent } from "@/lib/content/portfolio"
 
 export const metadata: Metadata = {
-  title: "Architecte \u00e0 Oran | Noun Studio",
+  title: "AddArt \u2014 Illustration, Cartoon Art & Motion \u00e0 Oran",
   description:
-    "Cabinet d'architecture et studio de design \u00e0 Oran, Alg\u00e9rie. Projets r\u00e9sidentiels, commerciaux et branding local.",
+    "Studio d'illustration et motion design \u00e0 Oran, Alg\u00e9rie. Character design, jaquettes de jeux, graphismes commerciaux et courtes animations.",
 }
 
 export default async function HomePage() {
