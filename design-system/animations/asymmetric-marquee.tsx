@@ -48,6 +48,12 @@ type MarqueeProps = {
   speed?: number;
   pauseOnHover?: boolean;
   className?: string;
+  /**
+   * CSS variable name (including leading `--`) used for the edge-fade gradient.
+   * Defaults to `--background`. Set to `--card` when the marquee sits on
+   * a `bg-card` section so the fades dissolve cleanly into the surrounding color.
+   */
+  fadeVar?: string;
 };
 
 const ASPECTS = ["tall", "wide", "square"] as const;
@@ -72,6 +78,7 @@ export function AsymmetricMarquee({
   speed = 40,
   pauseOnHover = true,
   className,
+  fadeVar = "--background",
 }: MarqueeProps) {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
@@ -127,21 +134,19 @@ export function AsymmetricMarquee({
       onFocusCapture={handleEnter}
       onBlurCapture={handleLeave}
     >
-      {/* Edge fades so cards emerge from and dissolve into the background. */}
+      {/* Edge fades so cards emerge from and dissolve into the surrounding color. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 md:w-40"
         style={{
-          background:
-            "linear-gradient(to right, hsl(var(--background)) 0%, hsl(var(--background) / 0) 100%)",
+          background: `linear-gradient(to right, hsl(var(${fadeVar})) 0%, hsl(var(${fadeVar}) / 0) 100%)`,
         }}
       />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 md:w-40"
         style={{
-          background:
-            "linear-gradient(to left, hsl(var(--background)) 0%, hsl(var(--background) / 0) 100%)",
+          background: `linear-gradient(to left, hsl(var(${fadeVar})) 0%, hsl(var(${fadeVar}) / 0) 100%)`,
         }}
       />
 
