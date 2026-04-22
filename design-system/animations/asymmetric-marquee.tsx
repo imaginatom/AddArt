@@ -164,8 +164,19 @@ export function AsymmetricMarquee({
 
           const Card = (
             <article
-              className={`group/card relative shrink-0 overflow-hidden rounded-2xl bg-card ${aspectClass[aspect]} ${offset}`}
+              className={`group/card relative shrink-0 overflow-hidden rounded-2xl bg-muted ring-1 ring-border/50 ${aspectClass[aspect]} ${offset}`}
             >
+              {/* Placeholder texture so the card has shape even when the
+                  image is still loading or fails. In production with real
+                  images, this sits behind and is fully covered. */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--card)) 50%, hsl(var(--accent) / 0.08) 100%)",
+                }}
+              />
               <Image
                 src={item.src}
                 alt={isClone ? "" : item.alt}
