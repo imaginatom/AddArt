@@ -92,17 +92,17 @@ export const homePageSectionOrder: HomePageSectionKey[] = [
 
 export const homePageDefaults: HomePageContent = {
   hero: {
-    badgeText: 'Illustration · Motion · Graphismes Commerciaux',
-    title: 'Illustration, Motion & Direction Artistique',
+    badgeText: '01 · Studio AddArt',
+    title: 'Illustration, Motion & Direction Artistique.',
     subtitle:
-      "AddArt est un studio d'illustration et de motion design fondé par {{ARTIST_NAME}}. Nous créons des personnages, des jaquettes de jeux, des visuels publicitaires et de courtes animations.",
+      "Studio indépendant d'illustration cartoon et de motion design. Basé à Oran, au service de marques, studios et éditeurs de jeux — en Algérie comme à l'international.",
     trustBullets: [
       'Illustrations cartoon & character design',
       'Jaquettes de jeux & key art',
       'Motion design & animations courtes',
       'Graphismes pour pubs et campagnes',
     ],
-    primaryCtaLabel: 'Découvrir nos services',
+    primaryCtaLabel: 'Démarrer un projet',
     secondaryCtaLabel: 'Voir le portfolio',
     backgroundImage: {
       src: '/images/hero-bg.jpg',

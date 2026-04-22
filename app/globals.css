@@ -169,6 +169,59 @@ html.lenis body {
   }
 }
 
+/* ── Journey chrome: page intro ──
+   Sequences for the <PageIntro> splash overlay on the home route.
+   The word rises into view (mask reveal), a magenta hairline wipes
+   right, then the whole panel slides up and off. */
+@keyframes page-intro-word {
+  from {
+    transform: translateY(110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes page-intro-hairline {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes page-intro-slide {
+  0%,
+  57% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* ── Journey chrome: text marquee ──
+   Infinite horizontal loop for the hero capability tags and the
+   manifesto phrase strip. The track renders its content twice so
+   translating -50% produces a seamless loop. */
+@keyframes text-marquee-ltr {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes text-marquee-rtl {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 /* Floating phone CTA pulse */
 @keyframes pulse-ring {
   0% {
