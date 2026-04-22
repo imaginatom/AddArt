@@ -1,0 +1,16 @@
+You are working on an architect portfolio website.
+
+Tech stack:
+- Next.js (or whatever framework you're using)
+- Supabase for auth and database
+- Tailwind CSS for styling
+
+Rules:
+- Use Supabase client library for all auth and database operations
+- Use Row Level Security (RLS) policies for access control
+- Admin role is determined by a role column in the profiles table
+- All CMS operations require authenticated admin user
+- Keep components modular and reusable
+- Use TypeScript
+- Handle loading and error states in all async operations
+- Don't modify existing page layouts or styling unless explicitly asked
