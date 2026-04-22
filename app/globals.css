@@ -67,9 +67,29 @@
   }
 }
 
-/* Smooth anchor scrolling */
+/* Smooth anchor scrolling (fallback for routes where Lenis is disabled) */
 html {
   scroll-behavior: smooth;
+}
+
+/* ── Lenis smooth scroll boilerplate ──
+   Applied automatically by <LenisProvider> on non-admin routes.
+   See: https://lenis.darkroom.engineering/ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 /* Respect prefers-reduced-motion globally */

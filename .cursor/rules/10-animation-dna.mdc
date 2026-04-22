@@ -1,0 +1,45 @@
+---
+description: Animation and motion conventions for AddArt. Auto-attach on frontend files.
+globs: app/**/*.tsx,components/**/*.tsx,design-system/**/*.ts,design-system/**/*.tsx
+---
+
+# Animation DNA
+
+AddArt is a motion design studio. Animations on the site must feel authored, not templated. Reference sites for DNA: **sonder.design** (editorial carousel + palette morphs + mid-sentence serif italic), **hellomonday.com** (asymmetric masonry with character micro-animations), **refokus.com** (cinematic case cards with autoplaying video).
+
+## The canonical animation source
+
+All non-trivial motion lives in `design-system/animations/`. Named primitives currently available:
+
+1. **`<SplitReveal>`** — line/word/char reveals with directional variants (`up`, `down`, `left`, `right`, `mask`). Built on split-type + GSAP + ScrollTrigger. Use for headings, callouts, and any "text entering the viewport should feel composed."
+2. **`<AsymmetricMarquee>`** — horizontal auto-scrolling carousel with non-uniform card sizes and hover-pause-with-data-reveal. Use for portfolio teasers, client logos with story, anything that should feel like a magazine reel.
+
+When asked to add a "new scroll effect" or "animation":
+
+1. Read `design-system/animations/README.md` first.
+2. Pick the closest existing primitive. Reference it by name in the response: "using `SplitReveal` with `direction='mask'`".
+3. If no primitive fits, propose a new primitive as a new file under `design-system/animations/`. Do not inline one-off GSAP code in page or section components.
+
+## Easings, durations, and tokens
+
+- Always import easing curves from `@/design-system/easings` (`EASE_OUT_EXPO`, `EASE_EDITORIAL`, `SPRING_SOFT`, etc.).
+- Always import design tokens from `@/design-system/tokens` when a component needs a color or spacing value in TypeScript. Do not hardcode hex colors.
+- Durations are expressed in seconds for GSAP, milliseconds for CSS transitions. The `DURATIONS` export in `easings.ts` is the source of truth.
+
+## Banned patterns
+
+- Generic 0.5s fade-up with default ease. Either use `SplitReveal` (for text) or the legacy `.animate-on-scroll` CSS class (for whole blocks). Do not add a third implementation.
+- Framer Motion `transition={{ duration: 0.5 }}` with no easing. Always specify a named easing from our tokens.
+- Hardcoded bezier strings like `cubic-bezier(0.22, 1, 0.36, 1)`. Use named constants.
+- Hover scale on cards without an accompanying opacity or shadow change — feels cheap.
+- Autoplay video without `muted` and `playsInline` — breaks on iOS.
+
+## Accessibility (non-negotiable)
+
+- Every primitive must respect `prefers-reduced-motion: reduce`. The fallback is: text is visible, elements are in final position, no motion occurs.
+- Keyboard focus must remain visible. Do not clip focus rings with `overflow-hidden` on interactive elements.
+- GSAP timelines and ScrollTrigger instances must be cleaned up in `useEffect` return to prevent memory leaks on route changes.
+
+## Where Lenis runs
+
+Lenis smooth-scroll wraps marketing routes only (home, /illustration, /motion, /realisations, /contact). It must NEVER wrap `/admin/**`. The provider reads `usePathname()` and becomes a pass-through on admin routes.

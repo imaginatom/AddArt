@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { FloatingCTA } from "@/components/floating-cta"
 import { BackToTop } from "@/components/back-to-top"
 import { ScrollAnimations } from "@/components/scroll-animations"
+import { LenisProvider } from "@/design-system/providers/lenis-provider"
 import "./globals.css"
 
 const dmSans = DM_Sans({
@@ -111,12 +112,14 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <SiteHeader />
-        <main id="main-content">{children}</main>
-        <SiteFooter />
-        <FloatingCTA />
-        <BackToTop />
-        <ScrollAnimations />
+        <LenisProvider>
+          <SiteHeader />
+          <main id="main-content">{children}</main>
+          <SiteFooter />
+          <FloatingCTA />
+          <BackToTop />
+          <ScrollAnimations />
+        </LenisProvider>
       </body>
     </html>
   )

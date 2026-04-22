@@ -1,0 +1,44 @@
+---
+description: AddArt project identity, stack, and conventions. Always loaded for every request.
+alwaysApply: true
+---
+
+# AddArt — project guide
+
+AddArt is a studio d'illustration, cartoon art et motion design based in Oran, Algeria. The site is in French (`fr-DZ`) and markets to an Algerian and international audience.
+
+## Stack (fixed — do not propose alternatives unless asked)
+
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Tailwind CSS 3.4 + shadcn/ui (Radix primitives, do not re-invent components that exist in `components/ui/`)
+- Supabase (@supabase/ssr + @supabase/supabase-js) for auth and CMS
+- Animation: GSAP + ScrollTrigger, Lenis (smooth scroll), motion/react (Framer Motion), split-type
+
+## Identity constraints
+
+- This is **NOT** an architect, branding, or generic agency portfolio. Prior versions of this project were; any leftover copy or imagery implying "architecture" is stale and should be flagged, not extended.
+- Primary deliverables shown on the site: character design, game cover art / jaquettes de jeux, commercial illustration, short animations, motion design reels.
+- Audience reads French. All user-facing copy is French unless explicitly stated otherwise.
+
+## Visual DNA
+
+- **Dark graphite base** (`--background: 220 12% 7%`), **platinum text** (`--foreground: 210 15% 94%`), **electric magenta accent** (`--accent: 322 88% 58%`). Do not propose light-mode or introduce additional brand colors without being asked.
+- Fonts: **DM Sans** (sans, body + UI) and **Playfair Display** (serif, display). Use `font-serif` for headlines and editorial emphasis, `font-sans` (default) for everything else.
+- Existing custom utilities in `app/globals.css`: `.metallic-surface`, `.metallic-text`, `.accent-text`, `.diagonal-left`/`.diagonal-right` (illustration hero), `.premium-button`, `.premium-card`, `.animate-on-scroll`. Reuse these; don't duplicate them with new class names.
+
+## Code conventions
+
+- All async server work handles loading and error states. Never `throw` on missing Supabase data — fall back to defaults from `lib/content/*.ts`.
+- Content is CMS-driven: every page merges Supabase `site_content` rows with a `*Defaults` export. Preserve this pattern.
+- Admin routes under `app/admin/**` require an authenticated admin (role column on `profiles`). Do not bypass.
+- Images and `next/image` only. No `<img>` tags in new code.
+- Use the `cn()` helper from `lib/utils` for conditional Tailwind classes.
+- Keep client components narrow — prefer server components except where interactivity requires it.
+
+## Anti-patterns (do NOT do these)
+
+- Do NOT modify existing page layouts (`app/**/page.tsx`) or section components unless the user explicitly asks for that file/section by name.
+- Do NOT rename existing Tailwind color tokens (`bg-background`, `text-foreground`, `bg-accent`, etc.). Add new tokens alongside if needed.
+- Do NOT introduce new animation systems that compete with `design-system/animations/*`. That folder is the canonical source. The legacy `hooks/use-scroll-animation.ts` + `.animate-on-scroll` CSS system is the BASELINE for simple fade-ups — do not extend it with new variants; prefer a design-system primitive for any non-trivial motion.
+- Do NOT add Lenis, GSAP ScrollTrigger, or any scroll-hijacking logic to `app/admin/**`. Admin routes must stay as native browser scroll.
+- Do NOT invent hex colors or bezier curves inline. Pull from `design-system/tokens.ts` and `design-system/easings.ts`.
