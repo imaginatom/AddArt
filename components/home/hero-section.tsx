@@ -3,6 +3,7 @@ import Link from "next/link"
 import { CheckCircle, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { homePageDefaults, type HomePageContent } from "@/lib/content/homepage"
+import { SplitReveal } from "@/design-system/animations/split-reveal"
 
 type HeroContent = HomePageContent["hero"]
 
@@ -24,38 +25,62 @@ export function HeroSection({ content = homePageDefaults.hero }: { content?: Her
 
       {/* Content */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-32 lg:px-8">
-        <div className="max-w-2xl animate-on-scroll is-visible" style={{ animationDelay: "200ms" }}>
-          {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-background/10 px-4 py-1.5 backdrop-blur-sm">
+        <div className="max-w-2xl">
+          {/* Badge — fades in first as a small reveal */}
+          <div
+            className="animate-on-scroll is-visible mb-6 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-background/10 px-4 py-1.5 backdrop-blur-sm"
+            style={{ animationDelay: "100ms" }}
+          >
             <span className="text-sm font-medium text-primary-foreground">
               {content.badgeText}
             </span>
           </div>
 
-          {/* H1 */}
-          <h1 className="font-serif text-4xl font-bold leading-tight text-background md:text-5xl lg:text-6xl text-balance">
+          {/* H1 — signature mask reveal, line by line */}
+          <SplitReveal
+            as="h1"
+            split="lines"
+            direction="mask"
+            immediate
+            delay={0.1}
+            className="font-serif text-4xl font-bold leading-tight text-background md:text-5xl lg:text-6xl text-balance"
+          >
             {content.title}
-          </h1>
+          </SplitReveal>
 
-          {/* Subtitle */}
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-background/80 md:text-lg">
+          {/* Subtitle — lines slide up after the headline completes */}
+          <SplitReveal
+            as="p"
+            split="lines"
+            direction="up"
+            immediate
+            delay={0.55}
+            className="mt-4 max-w-xl text-base leading-relaxed text-background/80 md:text-lg"
+          >
             {content.subtitle}
-          </p>
+          </SplitReveal>
 
-          {/* Trust Bullets */}
+          {/* Trust Bullets — staggered fade-up per item */}
           <ul className="mt-8 flex flex-col gap-2.5">
-            {content.trustBullets.map((bullet) => (
-              <li key={bullet} className="flex items-center gap-2.5 text-sm text-background/90">
+            {content.trustBullets.map((bullet, i) => (
+              <li
+                key={bullet}
+                className="animate-on-scroll is-visible flex items-center gap-2.5 text-sm text-background/90"
+                style={{ animationDelay: `${900 + i * 90}ms` }}
+              >
                 <CheckCircle className="h-4 w-4 shrink-0 text-accent" />
                 {bullet}
               </li>
             ))}
           </ul>
 
-          {/* CTAs */}
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          {/* CTAs — arrive last */}
+          <div
+            className="animate-on-scroll is-visible mt-8 flex flex-wrap items-center gap-3"
+            style={{ animationDelay: "1250ms" }}
+          >
             <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg hover:shadow-xl transition-all">
-              <Link href="/contact" aria-label="D\u00e9couvrir nos services">
+              <Link href="/contact" aria-label="Découvrir nos services">
                 {content.primaryCtaLabel}
               </Link>
             </Button>
@@ -68,9 +93,15 @@ export function HeroSection({ content = homePageDefaults.hero }: { content?: Her
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce" aria-hidden="true">
-        <ChevronDown className="h-6 w-6 text-background/60" />
+      {/* Scroll Indicator — outer fades in, inner loops the bounce */}
+      <div
+        className="animate-on-scroll is-visible absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
+        style={{ animationDelay: "1600ms" }}
+        aria-hidden="true"
+      >
+        <div className="animate-bounce">
+          <ChevronDown className="h-6 w-6 text-background/60" />
+        </div>
       </div>
     </section>
   )
