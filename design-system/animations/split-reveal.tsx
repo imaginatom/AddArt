@@ -84,36 +84,41 @@ export function SplitReveal({
     const el = ref.current;
     if (!el) return;
 
-    // Respect reduced-motion: bail out, content is already rendered.
+    // Respect reduced-motion: reveal parent, no animation.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       el.style.opacity = "1";
       return;
     }
 
-    // Split. types is a comma-separated string: we always compute lines so
-    // clip-path/mask variants have line boxes to work with.
+    const isMask = direction === "mask";
+
+    // For `mask` we MUST split into words as well, so there's an inner element
+    // to translate through the overflow-hidden `.line` container. Otherwise the
+    // line div is both the mask and the thing being translated, defeating it.
+    const effectiveSplit = isMask && split === "lines" ? "words" : split;
+
     const types =
-      split === "chars"
+      effectiveSplit === "chars"
         ? "lines,words,chars"
-        : split === "words"
+        : effectiveSplit === "words" || isMask
         ? "lines,words"
         : "lines";
 
     const instance = new SplitType(el, { types: types as "lines,words,chars" });
 
-    const targets =
-      split === "chars"
-        ? instance.chars ?? []
-        : split === "words"
-        ? instance.words ?? []
-        : instance.lines ?? [];
+    const targets = isMask
+      ? instance.words ?? []
+      : effectiveSplit === "chars"
+      ? instance.chars ?? []
+      : effectiveSplit === "words"
+      ? instance.words ?? []
+      : instance.lines ?? [];
 
-    if (targets.length === 0) return;
-
-    // For mask variant we wrap each line in an overflow-hidden container via CSS.
-    // split-type already wraps lines in a .line container with overflow options;
-    // we add inline overflow-hidden to the parent line, and translate the inner.
-    const isMask = direction === "mask";
+    // If split produced nothing (e.g. empty children), just reveal the parent.
+    if (targets.length === 0) {
+      el.style.opacity = "1";
+      return;
+    }
 
     if (isMask) {
       instance.lines?.forEach((line) => {
@@ -148,9 +153,13 @@ export function SplitReveal({
         break;
     }
 
-    const animTargets = isMask ? (instance.lines ?? []).flatMap((l) => [l.firstElementChild ?? l]) : targets;
+    // Apply from-state to children FIRST (hidden), then reveal the parent,
+    // then animate children. Without revealing the parent, the whole block
+    // stays at opacity:0 and nothing is ever seen.
+    gsap.set(targets, fromVars);
+    el.style.opacity = "1";
 
-    const tween = gsap.fromTo(animTargets, fromVars, {
+    const tween = gsap.to(targets, {
       ...toVars,
       duration,
       delay,
@@ -170,7 +179,6 @@ export function SplitReveal({
       tween.kill();
       instance.revert();
     };
-    // children is intentionally a dependency — if text changes, re-split.
   }, [children, split, direction, delay, duration, stagger, start, immediate]);
 
   return (

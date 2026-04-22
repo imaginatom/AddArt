@@ -92,6 +92,20 @@ html.lenis body {
   overflow: hidden;
 }
 
+/* ── <SplitReveal> safety fallback ──
+   SplitReveal renders its root at opacity:0 to prevent a flash of unanimated
+   text before JS hydrates. If hydration fails entirely (script blocked, network
+   error), this fallback forces the element visible after 2s so users never see
+   a permanently-blank headline. */
+@keyframes split-reveal-fallback {
+  to {
+    opacity: 1;
+  }
+}
+[data-split-reveal] {
+  animation: split-reveal-fallback 0.001s 2s forwards;
+}
+
 /* Respect prefers-reduced-motion globally */
 @media (prefers-reduced-motion: reduce) {
   html {
