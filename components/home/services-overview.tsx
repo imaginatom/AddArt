@@ -6,12 +6,14 @@ import { ArrowUpRight } from "lucide-react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { homePageDefaults, type HomePageContent } from "@/lib/content/homepage"
+import { JourneyBridge } from "@/design-system/chrome/journey-bridge"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
 type ServicesContent = HomePageContent["services"]
+type ServiceItem = ServicesContent["items"][number]
 
 /**
  * Services as Act 02 · Zoom in — pinned storytelling panel.
@@ -27,15 +29,13 @@ type ServicesContent = HomePageContent["services"]
  *   - An oversized numeral (01, 02, 03)
  *   - A display-scale serif title (line reveal)
  *   - A condensed body (mask wipe)
- *   - A visual plate on the right that morphs between service-specific
- *     gradients (no images required, no 404s — matches the studio's
- *     color-forward identity)
- *
- * Falls back to a clean stacked layout on mobile where pinning is disabled
- * for scroll comfort.
+ *   - A gradient plate on the right (service-specific, abstract cover art)
+ *   - A background media layer (image or video) sitting on the black
+ *     section background on the left side. Transparent assets keep the
+ *     black showing through behind them.
  */
 
-const SERVICE_HREFS = ["/illustration", "/motion", "/contact"]
+const SERVICE_HREFS = ["/realisations", "/realisations", "/contact"]
 
 /** Service-specific gradient plates — act as abstract cover art. */
 const SERVICE_PLATES = [
@@ -43,6 +43,68 @@ const SERVICE_PLATES = [
   "radial-gradient(80% 60% at 70% 25%, hsl(200 90% 58% / 0.65) 0%, transparent 60%), radial-gradient(70% 60% at 30% 80%, hsl(322 88% 58% / 0.55) 0%, transparent 60%), linear-gradient(135deg, hsl(220 50% 18%) 0%, hsl(200 40% 12%) 100%)",
   "radial-gradient(80% 60% at 50% 40%, hsl(145 65% 52% / 0.55) 0%, transparent 60%), radial-gradient(60% 60% at 80% 80%, hsl(322 88% 58% / 0.55) 0%, transparent 60%), linear-gradient(135deg, hsl(160 40% 16%) 0%, hsl(200 30% 12%) 100%)",
 ]
+
+function ServiceChapterMobile({
+  item,
+  index,
+  href,
+}: {
+  item: ServiceItem
+  index: number
+  href: string
+}) {
+  return (
+    <article className="animate-on-scroll relative overflow-hidden bg-black p-6">
+      {item.media?.src ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+        >
+          {item.media.type === "video" ? (
+            <video
+              src={item.media.src}
+              className="h-full w-full object-contain opacity-80"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls={false}
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={item.media.src}
+              alt={item.media.alt || item.title}
+              className="h-full w-full object-contain opacity-80"
+            />
+          )}
+        </div>
+      ) : null}
+
+      <div
+        className="relative z-10 font-serif font-bold leading-none text-accent/90"
+        style={{ fontSize: "clamp(120px, 30vw, 180px)" }}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </div>
+      <div className="relative z-10">
+        <h3 className="mt-4 font-serif text-3xl font-bold leading-tight text-balance text-white md:text-4xl">
+          {item.title}
+        </h3>
+        <p className="mt-4 text-base leading-relaxed text-white/90">
+          {item.description}
+        </p>
+        <Link
+          href={href}
+          className="mt-6 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.18em] text-white"
+        >
+          <span className="border-b border-white pb-0.5">En savoir plus</span>
+          <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </article>
+  )
+}
 
 export function ServicesOverview({
   content = homePageDefaults.services,
@@ -94,21 +156,65 @@ export function ServicesOverview({
     <section
       ref={sectionRef}
       data-journey-palette="graphite"
-      className="relative bg-background text-foreground"
+      data-journey-label="Pratique"
+      className="relative bg-black text-foreground"
     >
       {/* Sticky chapter frame (pinned on ≥lg, absolute on mobile so stacked
           fallback below renders instead) */}
       <div
         ref={stickyRef}
-        className="relative hidden h-screen overflow-hidden lg:block"
+        className="relative isolate hidden h-screen overflow-hidden lg:block"
       >
-        <div className="mx-auto flex h-full w-full max-w-7xl flex-col justify-between px-4 py-16 lg:px-8">
-          {/* Eyebrow row */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              <span className="h-px w-10 bg-accent" />
-              02 · {content.eyebrow}
+        {/* Media background layer — sits on the black section background,
+            spans everything to the left of the right gradient plate.
+            Transparent PNGs / WebM keep the black showing behind them. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 right-[28%] hidden lg:block"
+          data-journey-opt-out
+        >
+          {content.items.map((item, i) => (
+            <div
+              key={`media-${item.title}`}
+              className="absolute inset-0 transition-opacity duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{ opacity: activeIdx === i ? 1 : 0 }}
+            >
+              {item.media?.src ? (
+                item.media.type === "video" ? (
+                  <video
+                    src={item.media.src}
+                    className="h-full w-full object-contain"
+                    autoPlay={activeIdx === i}
+                    muted
+                    loop
+                    playsInline
+                    controls={false}
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.media.src}
+                    alt={item.media.alt || item.title}
+                    className="h-full w-full object-contain"
+                  />
+                )
+              ) : null}
             </div>
+          ))}
+        </div>
+
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col justify-between px-4 py-16 lg:px-8">
+          {/* Eyebrow row — now a JourneyBridge so the act reads as Acte II,
+              explicitly picking up from Arrivée (Act I). */}
+          <div className="flex items-center justify-between">
+            <JourneyBridge
+              roman="II"
+              ordinal="02 · 07"
+              from="Arrivée"
+              to={content.eyebrow}
+              whisper="Le studio passe du souffle au geste — comment la pratique se structure au quotidien."
+              className="flex-1 pb-0"
+            />
             {/* Chapter pagination */}
             <ol className="flex items-center gap-2">
               {content.items.map((item, i) => (
@@ -156,7 +262,6 @@ export function ServicesOverview({
               </div>
             </div>
 
-            {/* Title + description cross-fade */}
             <div className="col-span-8 relative">
               <div className="relative min-h-[280px]">
                 {content.items.map((item, i) => (
@@ -176,21 +281,24 @@ export function ServicesOverview({
                     }}
                   >
                     <h3
-                      className="font-serif font-bold leading-[1.02] tracking-tight text-foreground text-balance"
+                      className="font-serif font-bold leading-[1.02] tracking-tight text-balance text-white"
                       style={{ fontSize: "clamp(40px, 5.4vw, 84px)" }}
                     >
                       {item.title}
                     </h3>
-                    <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+                    <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg">
                       {item.description}
                     </p>
                     <Link
                       href={SERVICE_HREFS[i] ?? "/contact"}
-                      className="group/link mt-8 inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.18em] text-foreground"
+                      className="group/link mt-8 inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.18em] text-white"
                     >
                       <span className="relative">
                         En savoir plus
-                        <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-500 group-hover/link:scale-x-100" />
+                        <span
+                          aria-hidden="true"
+                          className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-white transition-transform duration-500 group-hover/link:scale-x-100"
+                        />
                       </span>
                       <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                     </Link>
@@ -212,8 +320,9 @@ export function ServicesOverview({
           </div>
         </div>
 
-        {/* Right-edge color plate. Fixed at the right 28% of the frame,
-            softly morphing between service-specific gradients. */}
+        {/* Right-edge color plate. Restored to the original gradient behavior.
+            Fixed at the right 28% of the frame, softly morphing between
+            service-specific gradients. */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 right-0 hidden w-[28%] lg:block"
@@ -231,12 +340,12 @@ export function ServicesOverview({
               />
             ))}
             {/* Softening gradient at the plate's left edge so it blends
-                into the section rather than looking pasted on. */}
+                into the black section rather than looking pasted on. */}
             <div
               className="absolute inset-y-0 left-0 w-16"
               style={{
                 background:
-                  "linear-gradient(to right, hsl(var(--background)) 0%, transparent 100%)",
+                  "linear-gradient(to right, hsl(0 0% 0%) 0%, transparent 100%)",
               }}
             />
             {/* Top-right journey mark */}
@@ -249,32 +358,19 @@ export function ServicesOverview({
 
       {/* Mobile fallback — stacked chapters, no pinning */}
       <div className="mx-auto flex max-w-2xl flex-col gap-14 px-4 py-24 lg:hidden">
-        <div className="flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-          <span className="h-px w-10 bg-accent" />
-          02 · {content.eyebrow}
-        </div>
+        <JourneyBridge
+          roman="II"
+          ordinal="02 · 07"
+          from="Arrivée"
+          to={content.eyebrow}
+        />
         {content.items.map((item, i) => (
-          <article key={item.title} className="animate-on-scroll">
-            <div
-              className="font-serif font-bold leading-none text-accent/90"
-              style={{ fontSize: "clamp(120px, 30vw, 180px)" }}
-            >
-              {String(i + 1).padStart(2, "0")}
-            </div>
-            <h3 className="mt-4 font-serif text-3xl font-bold leading-tight text-foreground text-balance md:text-4xl">
-              {item.title}
-            </h3>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              {item.description}
-            </p>
-            <Link
-              href={SERVICE_HREFS[i] ?? "/contact"}
-              className="mt-6 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.18em] text-foreground"
-            >
-              <span className="border-b border-accent pb-0.5">En savoir plus</span>
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </article>
+          <ServiceChapterMobile
+            key={item.title}
+            item={item}
+            index={i}
+            href={SERVICE_HREFS[i] ?? "/contact"}
+          />
         ))}
       </div>
     </section>

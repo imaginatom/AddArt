@@ -124,6 +124,8 @@ export function SplitReveal({
       instance.lines?.forEach((line) => {
         line.style.overflow = "hidden";
         line.style.display = "block";
+        // Tight display line-heights + overflow:hidden clip serif descenders (q, g, p, j).
+        line.style.paddingBottom = "0.35em";
       });
     }
 

@@ -222,6 +222,156 @@ html.lenis body {
   }
 }
 
+/* ── Journey chrome: ActFlash chapter card ──
+   Dissolves a framed plate in/out when the palette crosses into a new act.
+   The veil fades quickly, the plate scales & un-blurs to sell the "page turn". */
+@keyframes act-flash-fade {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes act-flash-plate {
+  0% {
+    transform: translate3d(0, 12px, 0) scale(0.96);
+    filter: blur(8px);
+  }
+  18% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+  82% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    transform: translate3d(0, -12px, 0) scale(1.02);
+    filter: blur(6px);
+  }
+}
+
+/* ── Journey chrome: JourneySpine act label swap ── */
+@keyframes spine-act-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+/* ── Journey chrome: CursorLens grow/shrink ──
+   On hover over interactive elements, the ring inflates and fills with
+   accent tint, inverts contrast for the target beneath. Pressed state
+   squeezes slightly to read as a tactile click. */
+[data-journey-chrome="cursor-ring"] {
+  transition:
+    width 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms ease;
+}
+
+[data-journey-chrome="cursor-ring"][data-mode="grow"] {
+  width: 64px;
+  height: 64px;
+  background: hsl(var(--accent) / 0.18);
+  border-color: hsl(var(--accent) / 0.9);
+  mix-blend-mode: normal;
+}
+
+[data-journey-chrome="cursor-ring"].is-pressed {
+  transform-origin: center;
+  width: 54px !important;
+  height: 54px !important;
+}
+
+[data-journey-chrome="cursor-ring"].is-hidden,
+[data-journey-chrome="cursor-dot"].is-hidden {
+  opacity: 0;
+}
+
+/* On interactive targets, fade the dot so the ring reads cleanly as a lens. */
+[data-journey-chrome="cursor-ring"][data-mode="grow"] + [data-journey-chrome="cursor-dot"] {
+  opacity: 0;
+}
+
+/* Hide native cursor on fine-pointer marketing routes only. */
+@media (pointer: fine) {
+  body.journey-mode {
+    cursor: none;
+  }
+  body.journey-mode a,
+  body.journey-mode button,
+  body.journey-mode [role="button"] {
+    cursor: none;
+  }
+  body.journey-mode input,
+  body.journey-mode textarea,
+  body.journey-mode [contenteditable="true"] {
+    cursor: text;
+  }
+}
+
+/* ── Narrative bridge — typographic opener stamped on top of each act ── */
+@keyframes bridge-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.journey-bridge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.journey-bridge::before {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: hsl(var(--accent));
+  flex-shrink: 0;
+}
+
+/* Testimonial pull-quote swap */
+@keyframes quote-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
 /* Floating phone CTA pulse */
 @keyframes pulse-ring {
   0% {

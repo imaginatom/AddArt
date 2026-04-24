@@ -1,32 +1,45 @@
-import { Award, Briefcase, Globe, Users } from "lucide-react"
-import { homePageDefaults, type HomePageContent } from "@/lib/content/homepage"
+import {
+  homePageDefaults,
+  type HomePageContent,
+} from "@/lib/content/homepage";
 
-type SocialProofContent = HomePageContent["socialProof"]
+type SocialProofContent = HomePageContent["socialProof"];
 
-const statIcons = [Award, Briefcase, Globe, Users]
-
+/**
+ * A ledger ribbon that sits between Hero (Arrival) and Services
+ * (Pratique). Rather than shouting stats with icons, it reads like the
+ * masthead of a magazine page: hairline rules, mono labels on top,
+ * display numerals below. Inherits the graphite palette, and introduces
+ * the tabular-numeral motif that reappears on the section index and
+ * the testimonials counter.
+ */
 export function SocialProofBar({
   content = homePageDefaults.socialProof,
 }: {
-  content?: SocialProofContent
+  content?: SocialProofContent;
 }) {
-  const stats = content.stats.map((stat, index) => ({
-    icon: statIcons[index] ?? Award,
-    value: stat.value,
-    label: stat.label,
-  }))
+  const stats = content.stats;
 
   return (
-    <section className="border-y border-border bg-card">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-10 md:grid-cols-4 lg:px-8 stagger-children">
-        {stats.map((stat) => (
-          <div key={stat.label} className="animate-on-scroll flex flex-col items-center gap-2 text-center">
-            <stat.icon className="h-5 w-5 text-accent" />
-            <span className="font-serif text-2xl font-bold text-foreground md:text-3xl">{stat.value}</span>
-            <span className="text-sm text-muted-foreground">{stat.label}</span>
+    <section
+      aria-label="Chiffres studio"
+      className="relative border-y border-[hsl(var(--foreground)/0.15)] bg-background text-foreground"
+    >
+      <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-[hsl(var(--foreground)/0.1)] px-0 md:grid-cols-4">
+        {stats.map((stat, idx) => (
+          <div
+            key={`${stat.label}-${idx}`}
+            className="flex flex-col gap-3 px-6 py-10 md:px-8"
+          >
+            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.35em] text-[hsl(var(--muted-foreground))]">
+              {String(idx + 1).padStart(2, "0")} · {stat.label}
+            </span>
+            <span className="font-serif text-[clamp(1.8rem,3vw,2.6rem)] leading-none tracking-tight tabular-nums text-[hsl(var(--foreground))]">
+              {stat.value}
+            </span>
           </div>
         ))}
       </div>
     </section>
-  )
+  );
 }

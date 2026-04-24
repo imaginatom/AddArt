@@ -1,12 +1,13 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ImageUpload } from "@/components/admin/image-upload"
+import { AdminInfoPanel, AdminPageHeader, AdminPageShell } from "@/components/admin/admin-ui"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import {
   mergePortfolioContent,
@@ -34,12 +35,6 @@ const createInitialSaveState = (): Record<PortfolioPageSectionKey, SaveState> =>
     },
     {} as Record<PortfolioPageSectionKey, SaveState>,
   )
-
-const updateListItem = <T,>(list: T[], index: number, value: T): T[] => {
-  const next = [...list]
-  next[index] = value
-  return next
-}
 
 export default function AdminPortfolioEditor() {
   const supabase = useMemo(() => createSupabaseBrowserClient(), [])
@@ -140,29 +135,28 @@ export default function AdminPortfolioEditor() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-4 py-14">
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin CMS</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Portfolio content</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Edit portfolio hero copy, gallery projects, and CTA messaging.
-          </p>
-        </div>
-      </div>
+    <AdminPageShell>
+      <AdminPageHeader
+        badge="Portfolio"
+        title="Portfolio content"
+        description="Manage the editorial copy for the portfolio route. Shared contact/email links come from Settings, while projects are managed in the dedicated manager."
+        actions={
+          <Button asChild>
+            <Link href="/admin/portfolio/projects">Manage projects</Link>
+          </Button>
+        }
+      />
 
       {loadError ? (
-        <div className="mt-8 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <AdminInfoPanel tone="error" className="mt-6">
           {loadError}
-        </div>
+        </AdminInfoPanel>
       ) : null}
 
       {isLoading ? (
-        <div className="mt-10 rounded-lg border border-border bg-card px-4 py-6 text-sm text-muted-foreground">
-          Loading portfolio content...
-        </div>
+        <AdminInfoPanel className="mt-6">Loading portfolio content...</AdminInfoPanel>
       ) : (
-        <div className="mt-10 space-y-8">
+        <div className="mt-8 space-y-8">
           <Card>
             <CardHeader>
               <CardTitle>Hero</CardTitle>
@@ -254,151 +248,20 @@ export default function AdminPortfolioEditor() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Gallery</CardTitle>
-              <CardDescription>Filter categories and portfolio projects.</CardDescription>
+              <CardTitle>Projects source</CardTitle>
+              <CardDescription>
+                Project records now come from the dedicated projects table.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <Label>Categories</Label>
-                <div className="grid gap-3 md:grid-cols-2">
-                  {content.gallery.categories.map((category, index) => (
-                    <Input
-                      key={`portfolio-category-${index}`}
-                      value={category}
-                      onChange={(event) =>
-                        updateSection("gallery", (prev) => ({
-                          ...prev,
-                          categories: updateListItem(prev.categories, index, event.target.value),
-                        }))
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-4">
-                {content.gallery.projects.map((project, index) => (
-                  <div key={`portfolio-project-${index}`} className="space-y-4 rounded-lg border border-border p-4">
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label htmlFor={`portfolio-project-title-${index}`}>Project title</Label>
-                          <Input
-                            id={`portfolio-project-title-${index}`}
-                            value={project.title}
-                            onChange={(event) =>
-                              updateSection("gallery", (prev) => ({
-                                ...prev,
-                                projects: updateListItem(prev.projects, index, {
-                                  ...project,
-                                  title: event.target.value,
-                                }),
-                              }))
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor={`portfolio-project-location-${index}`}>Location</Label>
-                          <Input
-                            id={`portfolio-project-location-${index}`}
-                            value={project.location}
-                            onChange={(event) =>
-                              updateSection("gallery", (prev) => ({
-                                ...prev,
-                                projects: updateListItem(prev.projects, index, {
-                                  ...project,
-                                  location: event.target.value,
-                                }),
-                              }))
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label htmlFor={`portfolio-project-category-${index}`}>Category</Label>
-                          <Input
-                            id={`portfolio-project-category-${index}`}
-                            value={project.category}
-                            onChange={(event) =>
-                              updateSection("gallery", (prev) => ({
-                                ...prev,
-                                projects: updateListItem(prev.projects, index, {
-                                  ...project,
-                                  category: event.target.value,
-                                }),
-                              }))
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor={`portfolio-project-image-alt-${index}`}>Image alt text</Label>
-                          <Input
-                            id={`portfolio-project-image-alt-${index}`}
-                            value={project.image.alt}
-                            onChange={(event) =>
-                              updateSection("gallery", (prev) => ({
-                                ...prev,
-                                projects: updateListItem(prev.projects, index, {
-                                  ...project,
-                                  image: {
-                                    ...project.image,
-                                    alt: event.target.value,
-                                  },
-                                }),
-                              }))
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor={`portfolio-project-description-${index}`}>Description</Label>
-                        <Textarea
-                          id={`portfolio-project-description-${index}`}
-                          value={project.description}
-                          onChange={(event) =>
-                            updateSection("gallery", (prev) => ({
-                              ...prev,
-                              projects: updateListItem(prev.projects, index, {
-                                ...project,
-                                description: event.target.value,
-                              }),
-                            }))
-                          }
-                        />
-                      </div>
-                      <ImageUpload
-                        label="Project image"
-                        value={{
-                          src: project.image.src,
-                          path: project.image.path ?? null,
-                        }}
-                        onChange={(nextValue) =>
-                          updateSection("gallery", (prev) => ({
-                            ...prev,
-                            projects: updateListItem(prev.projects, index, {
-                              ...project,
-                              image: {
-                                ...project.image,
-                                src: nextValue.src,
-                                path: nextValue.path ?? null,
-                              },
-                            }),
-                          }))
-                        }
-                      />
-                  </div>
-                ))}
-              </div>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Use the projects manager to add, edit, delete, reorder, and publish portfolio items.
+              </p>
             </CardContent>
-            <CardFooter className="flex flex-wrap items-center justify-between gap-3">
-              <Button onClick={() => saveSection("gallery")} disabled={saveStates.gallery.isSaving}>
-                {saveStates.gallery.isSaving ? "Saving..." : "Save gallery"}
+            <CardFooter>
+              <Button asChild variant="outline">
+                <Link href="/admin/portfolio/projects">Open projects manager</Link>
               </Button>
-              {saveStates.gallery.error ? (
-                <span className="text-sm text-destructive">{saveStates.gallery.error}</span>
-              ) : null}
-              {saveStates.gallery.message ? (
-                <span className="text-sm text-emerald-600">{saveStates.gallery.message}</span>
-              ) : null}
             </CardFooter>
           </Card>
 
@@ -462,34 +325,6 @@ export default function AdminPortfolioEditor() {
                   />
                 </div>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="portfolio-cta-email-label">Email button label</Label>
-                  <Input
-                    id="portfolio-cta-email-label"
-                    value={content.cta.emailLabel}
-                    onChange={(event) =>
-                      updateSection("cta", (prev) => ({
-                        ...prev,
-                        emailLabel: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="portfolio-cta-email-address">Email address</Label>
-                  <Input
-                    id="portfolio-cta-email-address"
-                    value={content.cta.emailAddress}
-                    onChange={(event) =>
-                      updateSection("cta", (prev) => ({
-                        ...prev,
-                        emailAddress: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
             </CardContent>
             <CardFooter className="flex flex-wrap items-center justify-between gap-3">
               <Button onClick={() => saveSection("cta")} disabled={saveStates.cta.isSaving}>
@@ -505,6 +340,6 @@ export default function AdminPortfolioEditor() {
           </Card>
         </div>
       )}
-    </section>
+    </AdminPageShell>
   )
 }

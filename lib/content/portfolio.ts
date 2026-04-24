@@ -25,8 +25,6 @@ export type PortfolioPageContent = {
     subtitle: string
     primaryCtaLabel: string
     primaryCtaHref: string
-    emailLabel: string
-    emailAddress: string
   }
 }
 
@@ -174,8 +172,6 @@ export const portfolioPageDefaults: PortfolioPageContent = {
     subtitle: "Contactez-nous pour parler de votre idée — devis gratuit et sans engagement.",
     primaryCtaLabel: "Discutons ensemble",
     primaryCtaHref: "/contact",
-    emailLabel: "addart69@gmail.com",
-    emailAddress: "addart69@gmail.com",
   },
 }
 

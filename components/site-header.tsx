@@ -12,16 +12,15 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
+import type { SiteSettingsContent } from "@/lib/content/settings"
 
 const navLinks = [
   { href: "/", label: "Accueil" },
-  { href: "/illustration", label: "Illustration" },
-  { href: "/motion", label: "Motion" },
   { href: "/realisations", label: "Portfolio" },
   { href: "/contact", label: "Contact" },
 ]
 
-export function SiteHeader() {
+export function SiteHeader({ settings }: { settings: SiteSettingsContent }) {
   const [scrolled, setScrolled] = useState(false)
   const [sheetOpen, setSheetOpen] = useState(false)
   const pathname = usePathname()
@@ -39,13 +38,30 @@ export function SiteHeader() {
   return (
     <header
       role="banner"
+      data-journey-chrome="site-header"
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         isTransparent
           ? "bg-transparent py-4"
-          : "bg-background/95 backdrop-blur-md shadow-sm py-2"
+          : "py-2 shadow-[0_1px_0_hsl(var(--foreground)/0.1)] backdrop-blur-md"
       )}
+      style={
+        isTransparent
+          ? undefined
+          : { background: "hsl(var(--background) / 0.88)" }
+      }
     >
+      {/* Hairline accent — hides when header is transparent so the hero stays clean.
+          Connects visually with the ScrollProgress bar; they share the accent color
+          and together act as a single chrome band. */}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left transition-opacity duration-500",
+          isTransparent ? "opacity-0" : "opacity-60"
+        )}
+        style={{ background: "hsl(var(--accent))" }}
+      />
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 lg:px-8">
         {/* Logo */}
         <Link href="/" aria-label="AddArt \u2014 Accueil" className="flex items-center gap-2">
@@ -57,13 +73,13 @@ export function SiteHeader() {
               "font-serif text-lg font-bold tracking-tight transition-colors",
               isTransparent ? "text-background" : "text-foreground"
             )}>
-              AddArt
+              {settings.brand.studioName}
             </span>
             <span className={cn(
               "text-xs font-medium tracking-widest uppercase transition-colors",
               isTransparent ? "text-background/70" : "text-muted-foreground"
             )}>
-              Studio
+              {settings.brand.studioLabel}
             </span>
           </div>
         </Link>
@@ -104,13 +120,13 @@ export function SiteHeader() {
                 : "border-primary/30 text-primary hover:bg-primary/5 hover:text-primary"
             )}
           >
-            <a href="mailto:addart69@gmail.com" aria-label="Envoyer un email">
+            <a href={`mailto:${settings.contact.email}`} aria-label="Envoyer un email">
               <Mail className="mr-1.5 h-3.5 w-3.5" />
-              Contact
+              {settings.cta.contactButtonLabel}
             </a>
           </Button>
           <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link href="/contact">Demander un devis</Link>
+            <Link href="/contact">{settings.cta.quoteButtonLabel}</Link>
           </Button>
         </div>
 
@@ -138,8 +154,8 @@ export function SiteHeader() {
                   <span className="text-sm font-bold text-accent-foreground font-serif">A</span>
                 </div>
                 <div className="flex flex-col leading-none">
-                  <span className="font-serif text-base font-bold text-foreground">AddArt</span>
-                  <span className="text-[10px] tracking-widest uppercase text-muted-foreground">Studio</span>
+                  <span className="font-serif text-base font-bold text-foreground">{settings.brand.studioName}</span>
+                  <span className="text-[10px] tracking-widest uppercase text-muted-foreground">{settings.brand.studioLabel}</span>
                 </div>
               </div>
 
@@ -166,14 +182,14 @@ export function SiteHeader() {
               {/* Drawer footer CTAs */}
               <div className="border-t border-border px-4 py-5 flex flex-col gap-3">
                 <Button asChild variant="outline" className="w-full border-primary/30 text-primary bg-transparent hover:bg-primary/5 hover:text-primary">
-                  <a href="mailto:addart69@gmail.com" aria-label="Envoyer un email">
+                  <a href={`mailto:${settings.contact.email}`} aria-label="Envoyer un email">
                     <Mail className="mr-2 h-4 w-4" />
-                    addart69@gmail.com
+                    {settings.contact.email}
                   </a>
                 </Button>
                 <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                   <Link href="/contact" onClick={() => setSheetOpen(false)}>
-                    Demander un devis
+                    {settings.cta.quoteButtonLabel}
                   </Link>
                 </Button>
               </div>

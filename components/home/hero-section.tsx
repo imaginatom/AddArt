@@ -73,6 +73,7 @@ export function HeroSection({ content = homePageDefaults.hero }: { content?: Her
   return (
     <section
       data-journey-palette="graphite"
+      data-journey-label="Arrivée"
       className="relative flex min-h-screen flex-col overflow-hidden bg-[hsl(220_14%_4%)]"
     >
       {/* Background image + gradient, wrapped for parallax transform */}

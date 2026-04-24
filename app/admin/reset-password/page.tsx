@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { AdminInfoPanel, AdminPageShell } from '@/components/admin/admin-ui'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export default function AdminResetPasswordPage() {
@@ -90,70 +92,63 @@ export default function AdminResetPasswordPage() {
   }
 
   return (
-    <section className="mx-auto flex min-h-[70vh] w-full max-w-md items-center px-4 py-16">
-      <div className="w-full rounded-2xl border border-border bg-card p-8 shadow-sm">
-        <div className="space-y-2 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            Admin Access
-          </p>
-          <h1 className="text-2xl font-semibold text-foreground">Reset password</h1>
-          <p className="text-sm text-muted-foreground">
-            Choose a new password for your admin account.
-          </p>
-        </div>
+    <AdminPageShell className="max-w-md py-20">
+      <Card className="border-border/80 bg-card/95 shadow-xl shadow-black/5">
+        <CardHeader className="space-y-2 text-center">
+          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Admin Access</p>
+          <CardTitle className="text-3xl">Reset password</CardTitle>
+          <CardDescription>Choose a new password for your admin account.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="admin-new-password">New password</Label>
+              <Input
+                id="admin-new-password"
+                type="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+            </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="admin-new-password">New password</Label>
-            <Input
-              id="admin-new-password"
-              type="password"
-              autoComplete="new-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-confirm-password">Confirm password</Label>
+              <Input
+                id="admin-confirm-password"
+                type="password"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                required
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="admin-confirm-password">Confirm password</Label>
-            <Input
-              id="admin-confirm-password"
-              type="password"
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              required
-            />
-          </div>
+            {!isChecking && !hasRecoverySession ? (
+              <AdminInfoPanel tone="error">
+                Invalid or expired reset link. Go back to login and request a new one.
+              </AdminInfoPanel>
+            ) : null}
 
-          {!isChecking && !hasRecoverySession ? (
-            <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              Invalid or expired reset link. Go back to login and request a new one.
-            </p>
-          ) : null}
+            {error ? (
+              <AdminInfoPanel tone="error">{error}</AdminInfoPanel>
+            ) : null}
 
-          {error ? (
-            <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
-            </p>
-          ) : null}
+            {successMessage ? (
+              <AdminInfoPanel tone="success">{successMessage}</AdminInfoPanel>
+            ) : null}
 
-          {successMessage ? (
-            <p className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-foreground">
-              {successMessage}
-            </p>
-          ) : null}
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting || isChecking || !hasRecoverySession}
-          >
-            {isSubmitting ? 'Updating password...' : 'Update password'}
-          </Button>
-        </form>
-      </div>
-    </section>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting || isChecking || !hasRecoverySession}
+            >
+              {isSubmitting ? 'Updating password...' : 'Update password'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </AdminPageShell>
   )
 }

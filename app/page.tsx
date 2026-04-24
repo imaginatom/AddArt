@@ -9,7 +9,8 @@ import { LocalSeoSection } from "@/components/home/local-seo-section"
 import { ContactCtaSection } from "@/components/home/contact-cta-section"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 import { mergeHomePageContent } from "@/lib/content/homepage"
-import { mergePortfolioContent } from "@/lib/content/portfolio"
+import { mapProjectRecords, type PortfolioProjectRecord } from "@/lib/content/portfolio-projects"
+import { mergeSiteSettingsContent } from "@/lib/content/settings"
 
 export const metadata: Metadata = {
   title: "AddArt \u2014 Illustration, Cartoon Art & Motion \u00e0 Oran",
@@ -19,17 +20,23 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const supabase = await createSupabaseServerClient()
-  const [homeResult, portfolioResult] = await Promise.all([
+  const [homeResult, projectResult, settingsResult] = await Promise.all([
     supabase.from("site_content").select("section, content").eq("page", "home"),
-    supabase.from("site_content").select("section, content").eq("page", "portfolio").eq("section", "gallery"),
+    supabase
+      .from("projects")
+      .select(
+        "id, slug, title, description, location, category, image_src, image_alt, image_path, status, sort_order",
+      )
+      .eq("status", "published")
+      .order("sort_order", { ascending: true }),
+    supabase.from("site_content").select("section, content").eq("page", "settings"),
   ])
   const content = mergeHomePageContent(homeResult.error ? [] : homeResult.data ?? [])
-  const portfolioContent = mergePortfolioContent(
-    portfolioResult.error ? [] : portfolioResult.data ?? [],
-  )
-  const previewImages = portfolioContent.gallery.projects.slice(0, 6).map((project) => ({
-    src: project.image.src,
-    alt: project.image.alt,
+  const settings = mergeSiteSettingsContent(settingsResult.error ? [] : settingsResult.data ?? [])
+  const projects = mapProjectRecords((projectResult.data as PortfolioProjectRecord[] | null) ?? null)
+  const previewImages = projects.slice(0, 6).map((project) => ({
+    src: project.image_src,
+    alt: project.image_alt,
     label: project.category,
   }))
 
@@ -42,7 +49,7 @@ export default async function HomePage() {
       <TestimonialsSection content={content.testimonials} />
       <GalleryPreview content={content.galleryPreview} images={previewImages} />
       <LocalSeoSection content={content.localSeo} />
-      <ContactCtaSection content={content.contactCta} />
+      <ContactCtaSection content={content.contactCta} settings={settings} />
     </>
   )
 }

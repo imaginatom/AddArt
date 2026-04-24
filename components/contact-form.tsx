@@ -3,8 +3,9 @@
 import { useState, type FormEvent } from "react"
 import { Send, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { SiteSettingsContent } from "@/lib/content/settings"
 
-export function ContactForm() {
+export function ContactForm({ settings }: { settings: SiteSettingsContent }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
@@ -22,9 +23,9 @@ export function ContactForm() {
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
           <Send className="h-5 w-5 text-accent" />
         </div>
-        <h3 className="font-serif text-lg font-bold text-foreground">{"Demande envoy\u00e9e\u00a0!"}</h3>
+        <h3 className="font-serif text-lg font-bold text-foreground">{settings.contactForm.successTitle}</h3>
         <p className="text-sm text-muted-foreground">
-          {"Merci pour votre message. Nous vous recontactons sous 48\u00a0h."}
+          {settings.contactForm.successMessage}
         </p>
       </div>
     )
@@ -92,7 +93,7 @@ export function ContactForm() {
       </div>
       <div>
         <label htmlFor="form-service" className="mb-1.5 block text-sm font-medium text-foreground">
-          Type de projet
+          {settings.contactForm.projectTypeLabel}
         </label>
         <select
           id="form-service"
@@ -100,14 +101,12 @@ export function ContactForm() {
           className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary focus:shadow-sm"
           defaultValue=""
         >
-          <option value="" disabled>{"S\u00e9lectionnez un type de projet"}</option>
-          <option value="character">{"Character design / Cartoon"}</option>
-          <option value="key-art">{"Jaquette de jeu / Key art"}</option>
-          <option value="commercial">{"Graphisme commercial / Pub"}</option>
-          <option value="editorial">{"Illustration \u00e9ditoriale"}</option>
-          <option value="motion">{"Courte animation / Motion design"}</option>
-          <option value="logo-anim">{"Logo anim\u00e9"}</option>
-          <option value="autre">{"Autre"}</option>
+          <option value="" disabled>{settings.contactForm.projectTypePlaceholder}</option>
+          {settings.contactForm.projectTypes.map((projectType) => (
+            <option key={projectType.value} value={projectType.value}>
+              {projectType.label}
+            </option>
+          ))}
         </select>
       </div>
       <div>
@@ -134,17 +133,17 @@ export function ContactForm() {
         {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Envoi en cours...
+            {settings.contactForm.submittingLabel}
           </>
         ) : (
           <>
             <Send className="mr-2 h-4 w-4" />
-            Envoyer ma demande
+            {settings.contactForm.submitLabel}
           </>
         )}
       </Button>
       <p className="text-xs text-muted-foreground">
-        {"En soumettant ce formulaire, vous acceptez d'\u00eatre recontact\u00e9(e) par AddArt. Vos donn\u00e9es sont trait\u00e9es confidentiellement."}
+        {settings.contactForm.disclaimer}
       </p>
     </form>
   )

@@ -2,12 +2,6 @@
 
 import { useEffect, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 /**
  * JourneyProvider — the site's master scroll timeline.
@@ -151,7 +145,7 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     const body = document.body;
     body.classList.add("journey-mode");
     applyPalette(body, PALETTES[DEFAULT_PALETTE]);
-    body.dataset.journeyPalette = DEFAULT_PALETTE;
+    body.dataset.journeyActive = DEFAULT_PALETTE;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -160,58 +154,119 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     if (reducedMotion) {
       return () => {
         body.classList.remove("journey-mode");
-        delete body.dataset.journeyPalette;
+        delete body.dataset.journeyActive;
       };
     }
 
-    const triggers: ScrollTrigger[] = [];
     let currentPalette: PaletteKey = DEFAULT_PALETTE;
-    let refreshId = 0;
+    let currentSection: HTMLElement | null = null;
 
-    const setPaletteIfDifferent = (next: PaletteKey) => {
-      if (next === currentPalette) return;
-      const palette = PALETTES[next] ?? PALETTES[DEFAULT_PALETTE];
-      applyPalette(body, palette);
+    const setActiveSection = (
+      next: PaletteKey,
+      section: HTMLElement | null,
+    ) => {
+      const paletteChanged = next !== currentPalette;
+      const sectionChanged = section !== currentSection;
+      if (!paletteChanged && !sectionChanged) return;
+
+      if (paletteChanged) {
+        const palette = PALETTES[next] ?? PALETTES[DEFAULT_PALETTE];
+        applyPalette(body, palette);
+      }
+      const previousPalette = currentPalette;
+      const previousSection = currentSection;
       currentPalette = next;
-      body.dataset.journeyPalette = next;
+      currentSection = section;
+      body.dataset.journeyActive = next;
+
+      window.dispatchEvent(
+        new CustomEvent("journey:act", {
+          detail: {
+            previousPalette,
+            previousSection,
+            palette: next,
+            section,
+            label: section?.dataset.journeyLabel ?? "",
+            paletteChanged,
+            sectionChanged,
+          },
+        }),
+      );
     };
 
-    // Collect sections after one frame so client-only content has mounted.
-    const raf = requestAnimationFrame(() => {
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>("[data-journey-palette]"),
+    /**
+     * Rather than creating per-section ScrollTriggers (which need careful
+     * refresh coordination with pinned siblings), we poll on scroll and
+     * determine the active palette by which section contains the viewport's
+     * palette line (55% down from the top). This is O(n) on every scroll
+     * tick where n is the small number of palette-declaring sections, and
+     * it's naturally resilient to layout changes (pins, image loads, font
+     * swaps) because it always reads live getBoundingClientRect values.
+     */
+    const paletteLineRatio = 0.5;
+    let rafId = 0;
+    let pending = false;
+
+    const detectActive = () => {
+      const sections = document.querySelectorAll<HTMLElement>(
+        "[data-journey-palette]",
       );
+      const line = window.innerHeight * paletteLineRatio;
+      let next: PaletteKey = currentPalette;
+      let nextEl: HTMLElement | null = currentSection;
+      let nextDistance = Infinity;
+      let foundHit = false;
+      for (const section of Array.from(sections)) {
+        if (section === document.body) continue;
+        const rect = section.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top >= window.innerHeight) continue;
+        if (!foundHit && rect.top <= line && rect.bottom > line) {
+          const key = section.dataset.journeyPalette as PaletteKey;
+          if (key && key in PALETTES) {
+            next = key;
+            nextEl = section;
+            nextDistance = 0;
+            foundHit = true;
+            continue;
+          }
+        }
+        if (!foundHit) {
+          const center = (rect.top + rect.bottom) / 2;
+          const distance = Math.abs(center - line);
+          if (distance < nextDistance) {
+            const key = section.dataset.journeyPalette as PaletteKey;
+            if (key && key in PALETTES) {
+              next = key;
+              nextEl = section;
+              nextDistance = distance;
+            }
+          }
+        }
+      }
+      setActiveSection(next, nextEl);
+      pending = false;
+    };
 
-      sections.forEach((section) => {
-        const paletteKey =
-          (section.dataset.journeyPalette as PaletteKey) ?? DEFAULT_PALETTE;
-        if (!(paletteKey in PALETTES)) return;
+    const onScroll = () => {
+      if (pending) return;
+      pending = true;
+      rafId = requestAnimationFrame(detectActive);
+    };
 
-        // A section "owns" the palette from when its top crosses 55% of the
-        // viewport down to when its bottom crosses the same line. Using the
-        // same line for enter/exit gives stable single-section ownership
-        // instead of brief blend zones that can flicker.
-        const trigger = ScrollTrigger.create({
-          trigger: section,
-          start: "top 55%",
-          end: "bottom 55%",
-          onEnter: () => setPaletteIfDifferent(paletteKey),
-          onEnterBack: () => setPaletteIfDifferent(paletteKey),
-        });
-        triggers.push(trigger);
-      });
-
-      // Refresh once after fonts/images settle so start/end points are
-      // computed against the final layout.
-      refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 400);
+    // Wait one frame so DOM has palette-declaring sections available.
+    const initRaf = requestAnimationFrame(() => {
+      detectActive();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
     });
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.clearTimeout(refreshId);
-      triggers.forEach((t) => t.kill());
+      cancelAnimationFrame(initRaf);
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       body.classList.remove("journey-mode");
-      delete body.dataset.journeyPalette;
+      delete body.dataset.journeyActive;
     };
   }, [isMarketingRoute, pathname]);
 

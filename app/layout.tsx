@@ -9,7 +9,13 @@ import { ScrollAnimations } from "@/components/scroll-animations"
 import { LenisProvider } from "@/design-system/providers/lenis-provider"
 import { JourneyProvider } from "@/design-system/providers/journey-provider"
 import { ScrollProgress } from "@/design-system/chrome/scroll-progress"
+import { SectionIndex } from "@/design-system/chrome/section-index"
+import { JourneySpine } from "@/design-system/chrome/journey-spine"
+import { ActFlash } from "@/design-system/chrome/act-flash"
+import { CursorLens } from "@/design-system/chrome/cursor-lens"
 import { PageIntro } from "@/design-system/chrome/page-intro"
+import { createSupabaseServerClient } from "@/lib/supabase/server"
+import { mergeSiteSettingsContent } from "@/lib/content/settings"
 import "./globals.css"
 
 const dmSans = DM_Sans({
@@ -77,35 +83,40 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "AddArt",
-  image: "/images/hero-bg.jpg",
-  email: "addart69@gmail.com",
-  founder: {
-    "@type": "Person",
-    name: "{{ARTIST_NAME}}",
-    jobTitle: "Illustrateur & Motion Designer",
-  },
-  url: "https://addart.dz",
-  description:
-    "Studio d'illustration, de cartoon art et de motion design à Oran, Algérie.",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Oran",
-    addressRegion: "Oran",
-    addressCountry: "DZ",
-  },
-  areaServed: ["Oran", "Algérie", "International"],
-  priceRange: "$$",
-}
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase
+    .from("site_content")
+    .select("section, content")
+    .eq("page", "settings")
+  const settings = mergeSiteSettingsContent(error ? [] : data ?? [])
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: settings.brand.studioName,
+    image: "/images/hero-bg.jpg",
+    email: settings.contact.email,
+    telephone: settings.contact.phone,
+    founder: {
+      "@type": "Person",
+      name: settings.brand.artistName,
+      jobTitle: settings.brand.artistRole,
+    },
+    url: "https://addart.dz",
+    description: settings.brand.footerDescription,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: settings.contact.location,
+      addressCountry: "DZ",
+    },
+    areaServed: ["Oran", "Algerie", "International"],
+    priceRange: "$$",
+  }
+
   return (
     <html lang="fr-DZ" className={`${dmSans.variable} ${playfair.variable}`}>
       <head>
@@ -119,10 +130,14 @@ export default function RootLayout({
           <JourneyProvider>
             <PageIntro />
             <ScrollProgress />
-            <SiteHeader />
+            <JourneySpine />
+            <SectionIndex />
+            <ActFlash />
+            <CursorLens />
+            <SiteHeader settings={settings} />
             <main id="main-content">{children}</main>
-            <SiteFooter />
-            <FloatingCTA />
+            <SiteFooter settings={settings} />
+            <FloatingCTA settings={settings} />
             <BackToTop />
             <ScrollAnimations />
           </JourneyProvider>

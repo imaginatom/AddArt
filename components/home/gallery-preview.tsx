@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { homePageDefaults, type HomePageContent } from "@/lib/content/homepage"
 import { SplitReveal } from "@/design-system/animations/split-reveal"
 import { AsymmetricMarquee, type MarqueeItem } from "@/design-system/animations/asymmetric-marquee"
+import { JourneyBridge } from "@/design-system/chrome/journey-bridge"
 
 type GalleryContent = HomePageContent["galleryPreview"]
 
@@ -23,21 +24,31 @@ export function GalleryPreview({
   }))
 
   return (
-    <section className="bg-card py-20 lg:py-28">
+    <section
+      data-journey-palette="graphite"
+      data-journey-label="Œuvres"
+      className="relative overflow-hidden bg-background py-24 text-foreground lg:py-32"
+    >
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <div className="animate-on-scroll mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-accent">
-            {content.eyebrow}
-          </p>
-          <SplitReveal
-            as="h2"
-            split="lines"
-            direction="mask"
-            className="mt-2 font-serif text-3xl font-bold text-foreground md:text-4xl text-balance"
-          >
-            {content.title}
-          </SplitReveal>
-          <p className="mt-3 text-muted-foreground">
+        <JourneyBridge
+          roman="V"
+          ordinal="05 · 07"
+          from="Voix"
+          to="Œuvres"
+          whisper="Les voix s'effacent, les images prennent leur tour. On défile, on regarde, on respire."
+        />
+        <div className="flex items-end justify-between border-b border-[hsl(var(--foreground)/0.18)] pb-6">
+          <div>
+            <SplitReveal
+              as="h2"
+              split="lines"
+              direction="mask"
+              className="font-serif text-[clamp(1.8rem,4vw,3rem)] leading-[1.02] tracking-tight"
+            >
+              {content.title}
+            </SplitReveal>
+          </div>
+          <p className="hidden max-w-xs text-right text-sm leading-relaxed text-[hsl(var(--muted-foreground))] md:block">
             {content.subtitle}
           </p>
         </div>
@@ -46,24 +57,24 @@ export function GalleryPreview({
       {/* Full-bleed asymmetric reel — breaks the container for edge-to-edge feel */}
       {marqueeItems.length > 0 ? (
         <div className="mt-14">
-          <AsymmetricMarquee items={marqueeItems} speed={45} fadeVar="--card" />
+          <AsymmetricMarquee items={marqueeItems} speed={45} fadeVar="--background" />
         </div>
       ) : null}
 
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <div className="mt-4 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <Button
             asChild
-            variant="outline"
-            className="border-primary/30 text-primary hover:bg-primary/5 hover:text-primary bg-transparent"
+            variant="ghost"
+            className="group h-auto px-0 text-sm font-medium uppercase tracking-[0.25em] text-[hsl(var(--foreground))] hover:bg-transparent hover:text-[hsl(var(--accent))]"
           >
             <Link href="/realisations">
               {content.ctaLabel}
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-3 h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
             </Link>
           </Button>
         </div>
       </div>
     </section>
-  )
+  );
 }

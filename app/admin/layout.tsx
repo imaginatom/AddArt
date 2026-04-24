@@ -7,9 +7,9 @@ type AdminLayoutProps = {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
       <AdminNav />
-      {children}
+      <div className="pb-10">{children}</div>
     </div>
   )
 }

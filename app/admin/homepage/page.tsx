@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { MediaUpload } from "@/components/admin/media-upload"
+import { AdminInfoPanel, AdminPageHeader, AdminPageShell } from "@/components/admin/admin-ui"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import {
   homePageDefaults,
@@ -142,29 +144,23 @@ export default function AdminHomepageEditor() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-4 py-14">
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin CMS</p>
-          <h1 className="mt-2 text-3xl font-semibold text-foreground">Homepage content</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Edit homepage copy and lists. Changes publish immediately after saving.
-          </p>
-        </div>
-      </div>
+    <AdminPageShell>
+      <AdminPageHeader
+        badge="Homepage"
+        title="Homepage content"
+        description="Edit hero messaging, section copy, and list content. Changes publish immediately after saving."
+      />
 
       {loadError ? (
-        <div className="mt-8 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <AdminInfoPanel tone="error" className="mt-6">
           {loadError}
-        </div>
+        </AdminInfoPanel>
       ) : null}
 
       {isLoading ? (
-        <div className="mt-10 rounded-lg border border-border bg-card px-4 py-6 text-sm text-muted-foreground">
-          Loading homepage content...
-        </div>
+        <AdminInfoPanel className="mt-6">Loading homepage content...</AdminInfoPanel>
       ) : (
-        <div className="mt-10 space-y-8">
+        <div className="mt-8 space-y-8">
           <Card>
             <CardHeader>
               <CardTitle>Hero</CardTitle>
@@ -437,6 +433,54 @@ export default function AdminHomepageEditor() {
                         }
                       />
                     </div>
+                    <MediaUpload
+                      label={
+                        index === 1
+                          ? "Motion media (video)"
+                          : index === 0
+                            ? "Illustration media (image)"
+                            : "Commandes sur-mesure media (image)"
+                      }
+                      kind={index === 1 ? "video" : "image"}
+                      value={service.media}
+                      onChange={(nextMedia) =>
+                        updateSection("services", (prev) => ({
+                          ...prev,
+                          items: updateListItem(prev.items, index, {
+                            ...service,
+                            media: {
+                              ...service.media,
+                              ...nextMedia,
+                              type: index === 1 ? "video" : "image",
+                            },
+                          }),
+                        }))
+                      }
+                      helperText={
+                        index === 1
+                          ? "Upload MP4/WebM with transparent background if available."
+                          : "Upload PNG/WebP (transparent background recommended)."
+                      }
+                    />
+                    <div className="space-y-2">
+                      <Label htmlFor={`service-media-alt-${index}`}>Media alt text</Label>
+                      <Input
+                        id={`service-media-alt-${index}`}
+                        value={service.media.alt ?? ""}
+                        onChange={(event) =>
+                          updateSection("services", (prev) => ({
+                            ...prev,
+                            items: updateListItem(prev.items, index, {
+                              ...service,
+                              media: {
+                                ...service.media,
+                                alt: event.target.value,
+                              },
+                            }),
+                          }))
+                        }
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -459,73 +503,15 @@ export default function AdminHomepageEditor() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Why us</CardTitle>
-              <CardDescription>Approach section.</CardDescription>
+              <CardTitle>Act III · Manifeste</CardTitle>
+              <CardDescription>
+                Manifest section content used on homepage (benefits strip, badge, and manifesto CTA).
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="whyus-eyebrow">Eyebrow</Label>
-                  <Input
-                    id="whyus-eyebrow"
-                    value={content.whyUs.eyebrow}
-                    onChange={(event) =>
-                      updateSection("whyUs", (prev) => ({
-                        ...prev,
-                        eyebrow: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="whyus-title">Title</Label>
-                  <Input
-                    id="whyus-title"
-                    value={content.whyUs.title}
-                    onChange={(event) =>
-                      updateSection("whyUs", (prev) => ({
-                        ...prev,
-                        title: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <ImageUpload
-                  label="Why us image"
-                  value={{ src: content.whyUs.image.src, path: content.whyUs.image.path ?? null }}
-                  onChange={(nextValue) =>
-                    updateSection("whyUs", (prev) => ({
-                      ...prev,
-                      image: {
-                        ...prev.image,
-                        src: nextValue.src,
-                        path: nextValue.path ?? null,
-                      },
-                    }))
-                  }
-                />
-                <div className="space-y-2">
-                  <Label htmlFor="whyus-image-alt">Image alt text</Label>
-                  <Input
-                    id="whyus-image-alt"
-                    value={content.whyUs.image.alt}
-                    onChange={(event) =>
-                      updateSection("whyUs", (prev) => ({
-                        ...prev,
-                        image: {
-                          ...prev.image,
-                          alt: event.target.value,
-                        },
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="whyus-badge-value">Badge value</Label>
+                  <Label htmlFor="whyus-badge-value">Manifest badge value</Label>
                   <Input
                     id="whyus-badge-value"
                     value={content.whyUs.floatingBadge.value}
@@ -541,7 +527,7 @@ export default function AdminHomepageEditor() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="whyus-badge-label">Badge label</Label>
+                  <Label htmlFor="whyus-badge-label">Manifest badge label</Label>
                   <Input
                     id="whyus-badge-label"
                     value={content.whyUs.floatingBadge.label}
@@ -596,7 +582,7 @@ export default function AdminHomepageEditor() {
                 ))}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="whyus-cta">CTA label</Label>
+                <Label htmlFor="whyus-cta">Manifest CTA label</Label>
                 <Input
                   id="whyus-cta"
                   value={content.whyUs.ctaLabel}
@@ -614,7 +600,7 @@ export default function AdminHomepageEditor() {
                 onClick={() => saveSection("whyUs")}
                 disabled={saveStates.whyUs.isSaving}
               >
-                {saveStates.whyUs.isSaving ? "Saving..." : "Save why us"}
+                {saveStates.whyUs.isSaving ? "Saving..." : "Save manifesto"}
               </Button>
               {saveStates.whyUs.error ? (
                 <span className="text-sm text-destructive">{saveStates.whyUs.error}</span>
@@ -967,34 +953,6 @@ export default function AdminHomepageEditor() {
                   />
                 </div>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="contact-email-label">Email label</Label>
-                  <Input
-                    id="contact-email-label"
-                    value={content.contactCta.emailLabel}
-                    onChange={(event) =>
-                      updateSection("contactCta", (prev) => ({
-                        ...prev,
-                        emailLabel: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contact-email-address">Email address</Label>
-                  <Input
-                    id="contact-email-address"
-                    value={content.contactCta.emailAddress}
-                    onChange={(event) =>
-                      updateSection("contactCta", (prev) => ({
-                        ...prev,
-                        emailAddress: event.target.value,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
             </CardContent>
             <CardFooter className="flex flex-wrap items-center justify-between gap-3">
               <Button
@@ -1013,6 +971,6 @@ export default function AdminHomepageEditor() {
           </Card>
         </div>
       )}
-    </section>
+    </AdminPageShell>
   )
 }

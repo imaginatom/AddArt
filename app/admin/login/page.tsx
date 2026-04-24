@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { AdminInfoPanel, AdminPageShell } from '@/components/admin/admin-ui'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export default function AdminLoginPage() {
@@ -104,72 +106,65 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <section className="mx-auto flex min-h-[70vh] w-full max-w-md items-center px-4 py-16">
-      <div className="w-full rounded-2xl border border-border bg-card p-8 shadow-sm">
-        <div className="space-y-2 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            Admin Access
-          </p>
-          <h1 className="text-2xl font-semibold text-foreground">Sign in</h1>
-          <p className="text-sm text-muted-foreground">
-            Use your admin credentials to continue.
-          </p>
-        </div>
+    <AdminPageShell className="max-w-md py-20">
+      <Card className="border-border/80 bg-card/95 shadow-xl shadow-black/5">
+        <CardHeader className="space-y-2 text-center">
+          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Admin Access</p>
+          <CardTitle className="text-3xl">Sign in</CardTitle>
+          <CardDescription>Use your admin credentials to access the dashboard.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="admin-email">Email</Label>
+              <Input
+                id="admin-email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+            </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="admin-email">Email</Label>
-            <Input
-              id="admin-email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-password">Password</Label>
+              <Input
+                id="admin-password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+                disabled={isSubmitting || isSendingReset || isChecking}
+              >
+                {isSendingReset ? 'Sending reset link...' : 'Forgot password?'}
+              </button>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="admin-password">Password</Label>
-            <Input
-              id="admin-password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              className="text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
-              disabled={isSubmitting || isSendingReset || isChecking}
+            {error ? (
+              <AdminInfoPanel tone="error">{error}</AdminInfoPanel>
+            ) : null}
+
+            {resetMessage ? (
+              <AdminInfoPanel tone="success">{resetMessage}</AdminInfoPanel>
+            ) : null}
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting || isChecking}
             >
-              {isSendingReset ? 'Sending reset link...' : 'Forgot password?'}
-            </button>
-          </div>
-
-          {error ? (
-            <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
-            </p>
-          ) : null}
-
-          {resetMessage ? (
-            <p className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-foreground">
-              {resetMessage}
-            </p>
-          ) : null}
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting || isChecking}
-          >
-            {isSubmitting || isChecking ? 'Checking access...' : 'Sign in'}
-          </Button>
-        </form>
-      </div>
-    </section>
+              {isSubmitting || isChecking ? 'Checking access...' : 'Sign in'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </AdminPageShell>
   )
 }

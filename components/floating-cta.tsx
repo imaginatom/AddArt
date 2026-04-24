@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react"
 import { Mail } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { SiteSettingsContent } from "@/lib/content/settings"
 
-export function FloatingCTA() {
+export function FloatingCTA({ settings }: { settings: SiteSettingsContent }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -21,8 +22,8 @@ export function FloatingCTA() {
       )}
     >
       <a
-        href="mailto:addart69@gmail.com"
-        aria-label="Contacter AddArt par email"
+        href={`mailto:${settings.contact.email}`}
+        aria-label={settings.cta.floatingCtaLabel}
         className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-200 ease-out hover:scale-110 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <span className="absolute inset-0 rounded-full bg-primary animate-pulse-ring" />

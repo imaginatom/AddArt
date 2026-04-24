@@ -24,6 +24,12 @@ export type HomePageContent = {
     items: Array<{
       title: string
       description: string
+      media: {
+        type: 'image' | 'video'
+        src: string
+        path?: string | null
+        alt?: string
+      }
     }>
   }
   whyUs: {
@@ -72,8 +78,6 @@ export type HomePageContent = {
   contactCta: {
     title: string
     subtitle: string
-    emailLabel: string
-    emailAddress: string
   }
 }
 
@@ -125,16 +129,31 @@ export const homePageDefaults: HomePageContent = {
         title: 'Illustration & Cartoon Art',
         description:
           "Character design, illustrations cartoon, key art et graphismes commerciaux. Un style expressif, coloré et taillé pour capter l'attention.",
+        media: {
+          type: 'image',
+          src: '/images/gallery-1.jpg',
+          alt: "Illustration & Cartoon Art par AddArt",
+        },
       },
       {
         title: 'Motion & Animations',
         description:
           "Courtes animations, motion design pour pubs, logos animés et storyboards. De l'idée à la vidéo finale prête à diffuser.",
+        media: {
+          type: 'video',
+          src: '',
+          alt: 'Motion & Animations par AddArt',
+        },
       },
       {
         title: 'Commandes sur-mesure',
         description:
           "Briefs créatifs, collaborations studio et projets hybrides. Parlons ensemble de votre univers et de l'effet recherché.",
+        media: {
+          type: 'image',
+          src: '/images/gallery-3.jpg',
+          alt: 'Commandes sur-mesure par AddArt',
+        },
       },
     ],
   },
@@ -246,8 +265,6 @@ export const homePageDefaults: HomePageContent = {
   contactCta: {
     title: 'Parlons de votre projet',
     subtitle: 'Devis gratuit — réponse sous 48 h',
-    emailLabel: 'Email',
-    emailAddress: 'addart69@gmail.com',
   },
 }
 
@@ -299,6 +316,30 @@ const mergeList = <T extends Record<string, unknown>>(
   })
 }
 
+const mergeServiceItems = (
+  fallback: HomePageContent['services']['items'],
+  value: unknown,
+): HomePageContent['services']['items'] => {
+  if (!Array.isArray(value)) {
+    return fallback
+  }
+
+  return fallback.map((item, index) => {
+    const entry = value[index]
+    if (!isRecord(entry)) {
+      return item
+    }
+    return {
+      ...item,
+      ...(entry as Partial<typeof item>),
+      media: {
+        ...item.media,
+        ...(isRecord(entry.media) ? (entry.media as Partial<typeof item.media>) : {}),
+      },
+    }
+  })
+}
+
 export const mergeHomePageContent = (
   entries: SiteContentEntry[] = [],
 ): HomePageContent => {
@@ -336,7 +377,7 @@ export const mergeHomePageContent = (
     },
     services: {
       ...mergeObject(homePageDefaults.services, servicesOverride),
-      items: mergeList(
+      items: mergeServiceItems(
         homePageDefaults.services.items,
         isRecord(servicesOverride) ? servicesOverride.items : undefined,
       ),
